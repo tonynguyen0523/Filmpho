@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/fav_menu_review"
+        android:title="@string/reviews"
+        android:orderInCategory="100"/>
+
+    <item
+        android:id="@+id/fav_menu_videos"
+        android:title="@string/videos"
+        android:orderInCategory="101"/>
+
+    <item
+        android:id="@+id/fav_menu_delete"
+        android:title="Delete"
+        android:orderInCategory="102"/>
+
+</menu>
