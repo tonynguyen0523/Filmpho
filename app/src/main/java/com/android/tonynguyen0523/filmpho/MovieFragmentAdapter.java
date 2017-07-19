@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -19,22 +20,23 @@ import butterknife.ButterKnife;
  * Created by tonynguyen on 1/28/17.
  */
 
-public class MovieRecyclerGridAdapter extends CursorRecyclerViewAdapter<MovieRecyclerGridAdapter.ViewHolder> {
+public class MovieFragmentAdapter extends CursorRecyclerViewAdapter<MovieFragmentAdapter.ViewHolder> {
 
     private Context mContext;
-
     private GridItemClickListener listener;
 
-    MovieRecyclerGridAdapter(Context context, Cursor cursor){
+    MovieFragmentAdapter(Context context, Cursor cursor){
         super(context,cursor);
         mContext = context;
-
     }
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         @BindView(R.id.movie_poster_grid_item) ImageView mPosterImage;
-        @BindView(R.id.poster_progress_bar)ProgressBar mProgressBar;
+        @BindView(R.id.movie_position_number)
+        TextView mPositionNumber;
+        @BindView(R.id.movie_card_title) TextView mMovieTitle;
+        @BindView(R.id.movie_progress_bar)ProgressBar mProgressBar;
 
         ViewHolder(View view) {
             super(view);
@@ -67,7 +69,7 @@ public class MovieRecyclerGridAdapter extends CursorRecyclerViewAdapter<MovieRec
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.movie_grid_items,parent,false);
+                .inflate(R.layout.fragment_movie_recycler_item,parent,false);
 
         final ViewHolder vh = new ViewHolder(itemView);
 
@@ -78,6 +80,11 @@ public class MovieRecyclerGridAdapter extends CursorRecyclerViewAdapter<MovieRec
     public void onBindViewHolder(final ViewHolder viewHolder, final Cursor cursor) {
 
         String imageUrl = Utility.formatImageUrl(cursor.getString(MovieFragment.COL_MOVIE_IMAGEURL));
+        String position = Integer.toString(cursor.getInt(MovieFragment.COL_ROW_ID));
+        String title = cursor.getString(MovieFragment.COL_MOVIE_TITLE);
+
+        viewHolder.mMovieTitle.setText(title);
+        viewHolder.mPositionNumber.setText(position);
 
         Picasso.with(mContext).load(imageUrl).into(viewHolder.mPosterImage, new Callback() {
             @Override

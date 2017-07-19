@@ -25,6 +25,8 @@ public class MovieProvider extends ContentProvider {
     static final int SORTBY = 200;
     static final int FAVORITES = 300;
     static final int FAVORITES_WITH_SORTBY_AND_MOVIEID = 301;
+    static final int NOW_PLAYING = 400;
+    static final int NOW_PLAYING_WITH_MOVIEID = 401;
 
     private static final SQLiteQueryBuilder sMovieBySortByQueryBuilder;
 
@@ -77,6 +79,12 @@ public class MovieProvider extends ContentProvider {
                 + " = ? AND "
                 + MovieContract.FavoriteMovieEntry.COLUMN_MOVIEID
                 + " = ? ";
+
+    // now playing table
+    // movieId = ?
+    private static final String sNowPlayingMovieIdSeletion =
+            MovieContract.NowPlayingMovieEntry.COLUMN_MOVIEID
+                + " = ?";
 
     /**
      * Retrieve movies from database by the sort selected
@@ -132,6 +140,20 @@ public class MovieProvider extends ContentProvider {
                 sortOrder);
     }
 
+    private Cursor getNowPlayingByMovieId(Uri uri, String[] projection, String sortOrder){
+
+        String movieId = MovieContract.MovieEntry.getMovieIdFromUri(uri);
+
+        return mOpenHelper.getReadableDatabase().query(
+                MovieContract.NowPlayingMovieEntry.TABLE_NAME,
+                projection,
+                sNowPlayingMovieIdSeletion,
+                new String[]{movieId},
+                null,
+                null,
+                sortOrder);
+    }
+
     /** Construct UriMatcher with the content type constants */
     static UriMatcher buildUriMatcher() {
 
@@ -144,6 +166,8 @@ public class MovieProvider extends ContentProvider {
         matcher.addURI(authority, MovieContract.PATH_SORTBY, SORTBY);
         matcher.addURI(authority, MovieContract.PATH_FAVORITE,FAVORITES);
         matcher.addURI(authority, MovieContract.PATH_FAVORITE + "/*/*", FAVORITES_WITH_SORTBY_AND_MOVIEID);
+        matcher.addURI(authority, MovieContract.PATH_NOW_PLAYING,NOW_PLAYING);
+        matcher.addURI(authority, MovieContract.PATH_NOW_PLAYING + "/*", NOW_PLAYING_WITH_MOVIEID);
 
         return matcher;
     }
@@ -173,6 +197,10 @@ public class MovieProvider extends ContentProvider {
                 return MovieContract.FavoriteMovieEntry.CONTENT_TYPE;
             case FAVORITES_WITH_SORTBY_AND_MOVIEID:
                 return MovieContract.FavoriteMovieEntry.CONTENT_ITEM_TYPE;
+            case NOW_PLAYING:
+                return MovieContract.NowPlayingMovieEntry.CONTENT_TYPE;
+            case NOW_PLAYING_WITH_MOVIEID:
+                return MovieContract.NowPlayingMovieEntry.CONTENT_ITEM_TYPE;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -232,6 +260,22 @@ public class MovieProvider extends ContentProvider {
                 );
                 break;
             }
+            case NOW_PLAYING: {
+                retCursor = mOpenHelper.getReadableDatabase().query(
+                        MovieContract.NowPlayingMovieEntry.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+            }
+            case NOW_PLAYING_WITH_MOVIEID:{
+                retCursor = getNowPlayingByMovieId(uri,projection,sortOrder);
+                break;
+            }
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -270,7 +314,15 @@ public class MovieProvider extends ContentProvider {
                     throw new IllegalArgumentException("Insertion is not supported for " + uri);
                 }
                 break;
-
+            }
+            case NOW_PLAYING: {
+                long _id = db.insert(MovieContract.NowPlayingMovieEntry.TABLE_NAME,null,values);
+                if(_id > 0){
+                    returnUri = MovieContract.NowPlayingMovieEntry.buildNowPlayingUri(_id);
+                } else {
+                    throw new IllegalArgumentException("Insertion is not supported for " + uri);
+                }
+                break;
             }
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
@@ -302,6 +354,10 @@ public class MovieProvider extends ContentProvider {
                 rowsDeleted = db.delete(
                         MovieContract.FavoriteMovieEntry.TABLE_NAME,selection,selectionArgs);
                 break;
+            case NOW_PLAYING:
+                rowsDeleted = db.delete(
+                        MovieContract.NowPlayingMovieEntry.TABLE_NAME,selection,selectionArgs);
+                break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -330,6 +386,10 @@ public class MovieProvider extends ContentProvider {
             case SORTBY:
                 rowsUpdated = db.update(
                         MovieContract.MovieSortByEntry.TABLE_NAME, values, selection, selectionArgs);
+                break;
+            case NOW_PLAYING:
+                rowsUpdated = db.update(
+                        MovieContract.NowPlayingMovieEntry.TABLE_NAME, values, selection, selectionArgs);
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
@@ -362,6 +422,22 @@ public class MovieProvider extends ContentProvider {
                 }
                 getContext().getContentResolver().notifyChange(uri, null);
                 return returnCount;
+            case NOW_PLAYING:
+                db.beginTransaction();
+                int returnCount1 = 0;
+                try {
+                    for (ContentValues value : values) {
+                        long _id = db.insert(MovieContract.NowPlayingMovieEntry.TABLE_NAME, null, value);
+                        if (_id != -1) {
+                            returnCount1++;
+                        }
+                    }
+                    db.setTransactionSuccessful();
+                } finally {
+                    db.endTransaction();
+                }
+                getContext().getContentResolver().notifyChange(uri, null);
+                return returnCount1;
             default:
                 return super.bulkInsert(uri, values);
         }

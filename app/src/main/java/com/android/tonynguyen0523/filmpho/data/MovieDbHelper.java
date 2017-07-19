@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.android.tonynguyen0523.filmpho.data.MovieContract.FavoriteMovieEntry;
 import com.android.tonynguyen0523.filmpho.data.MovieContract.MovieSortByEntry;
 
+import static com.android.tonynguyen0523.filmpho.data.MovieContract.*;
 import static com.android.tonynguyen0523.filmpho.data.MovieContract.MovieEntry;
 
 /**
@@ -15,7 +16,7 @@ import static com.android.tonynguyen0523.filmpho.data.MovieContract.MovieEntry;
 
 public class MovieDbHelper extends SQLiteOpenHelper{
 
-    private static final int DATABASE_VERSION = 4;
+    private static final int DATABASE_VERSION = 5;
 
     public static final String DATABASE_NAME = "movie.db";
 
@@ -60,9 +61,19 @@ public class MovieDbHelper extends SQLiteOpenHelper{
                 + FavoriteMovieEntry.COLUMN_RELEASEDATE + " TEXT NOT NULL,"
                 + FavoriteMovieEntry.COLUMN_SORT_CATEGORY + " TEXT NOT NULL"+ ");";
 
+        final String SQL_CREATE_NOW_PLAYING_TABLE = "CREATE TABLE " + NowPlayingMovieEntry.TABLE_NAME + " ("
+                + NowPlayingMovieEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + NowPlayingMovieEntry.COLUMN_MOVIEID + " TEXT UNIQUE NOT NULL,"
+                + NowPlayingMovieEntry.COLUMN_TITLE + " TEXT NOT NULL,"
+                + NowPlayingMovieEntry.COLUMN_IMAGEURL + " TEXT NOT NULL,"
+                + NowPlayingMovieEntry.COLUMN_PLOT + " TEXT NOT NULL,"
+                + NowPlayingMovieEntry.COLUMN_RATING + " TEXT NOT NULL,"
+                + NowPlayingMovieEntry.COLUMN_RELEASEDATE + " TEXT NOT NULL"+ ");";
+
         db.execSQL(SQL_CREATE_SORTBY_TABLE);
         db.execSQL(SQL_CREATE_MOVIE_TABLE);
         db.execSQL(SQL_CREATE_FAVORITE_TABLE);
+        db.execSQL(SQL_CREATE_NOW_PLAYING_TABLE);
     }
 
     @Override
@@ -73,6 +84,7 @@ public class MovieDbHelper extends SQLiteOpenHelper{
         db.execSQL("DROP TABLE IF EXISTS " + MovieSortByEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + MovieEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + FavoriteMovieEntry.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + NowPlayingMovieEntry.TABLE_NAME);
         onCreate(db);
 
     }

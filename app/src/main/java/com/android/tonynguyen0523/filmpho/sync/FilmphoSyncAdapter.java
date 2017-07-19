@@ -23,21 +23,23 @@ import com.android.tonynguyen0523.filmpho.data.MovieContract;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
 public class FilmphoSyncAdapter extends AbstractThreadedSyncAdapter {
-    public final String LOG_TAG = FilmphoSyncAdapter.class.getSimpleName();
+    private final String LOG_TAG = FilmphoSyncAdapter.class.getSimpleName();
 
-    public static final int SYNC_INTERVAL = 60*180;
-    public static final int SYNC_FLEXTIME = SYNC_INTERVAL/3;
+    private static final int SYNC_INTERVAL = 60*180;
+    private static final int SYNC_FLEXTIME = SYNC_INTERVAL/3;
 
-    public FilmphoSyncAdapter(Context context, boolean autoInitialize) {
+    FilmphoSyncAdapter(Context context, boolean autoInitialize) {
         super(context, autoInitialize);
     }
 
@@ -45,101 +47,133 @@ public class FilmphoSyncAdapter extends AbstractThreadedSyncAdapter {
     public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
         Log.d(LOG_TAG, "onPerformSync Called.");
         final String sortByQuery = Utility.getPreferredSortBy(getContext());
-        String url = Utility.getUrl(sortByQuery);
+        String sortUrl = Utility.getUrl(sortByQuery);
+        String nowPlayingUrl = "https://api.themoviedb.org/3/movie/now_playing?api_key=9ea41b1708f89fe7b448e6b08a4d5be0&language=en-US&page=1";
 
-        // Use the created url for JsonObjectRequest.
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-                Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+        // String volley
+        StringRequest stringNowPlayingRequest = new StringRequest(Request.Method.GET, nowPlayingUrl, new Response.Listener<String>() {
             @Override
-            public void onResponse(JSONObject response) {
-
-                // Json parse response object.
+            public void onResponse(String response) {
                 try {
-                    getMovieDataFromJson(response,sortByQuery);
+                    getNowPlayingMovieDataFromGSON(response);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+
             }
+
         });
 
-        MySingleton.getInstance(getContext().getApplicationContext()).addToRequestQueue(jsonObjectRequest);
-            // This will only happen if there was an error getting or parsing the forecast.
-            return;
-        }
+        // String volley
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, sortUrl, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    getMovieDataFromGSON(response,sortByQuery);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
 
-    private void getMovieDataFromJson(JSONObject response, String sortBy)
+            }
+
+    });
+        MySingleton.getInstance(getContext().getApplicationContext()).addToRequestQueue(stringRequest);
+        MySingleton.getInstance(getContext().getApplicationContext()).addToRequestQueue(stringNowPlayingRequest);
+    }
+
+    private void getNowPlayingMovieDataFromGSON(String response)
             throws JSONException {
 
-        // These are the names of the JSON objects that need to be extracted.
-        final String MDB_RESULT = "results";
-        final String MDB_TITLE = "original_title";
-        final String MDB_POSTER = "poster_path";
-        final String MDB_OVERVIEW = "overview";
-        final String MDB_RATING = "vote_average";
-        final String MDB_RELEASE_DATE = "release_date";
-        final String MDB_MOVIE_ID = "id";
+        Gson gson = new GsonBuilder().create();
+        MovieDBResponse movieDBResponse = gson.fromJson(response,MovieDBResponse.class);
+        List<Movies> nowPlayingMoviesList = new ArrayList<>();
+        if(!nowPlayingMoviesList.isEmpty()){nowPlayingMoviesList.clear();}
+        nowPlayingMoviesList = movieDBResponse.getList();
 
-        try {
 
-            long sortById = addSortBy(sortBy);
+        Vector<ContentValues> cVVector = new Vector<>(nowPlayingMoviesList.size());
 
-            JSONArray movieArray = response.getJSONArray(MDB_RESULT);
+        Log.d(LOG_TAG,"Now playing " + Integer.toString(nowPlayingMoviesList.size()));
 
-            Vector<ContentValues> cVVector = new Vector<ContentValues>(movieArray.length());
+        for(int i = 0; i < nowPlayingMoviesList.size(); i++){
 
-            for (int i = 0; i < movieArray.length(); i++) {
+            ContentValues movieValues = new ContentValues();
+            movieValues.put(MovieContract.NowPlayingMovieEntry.COLUMN_MOVIEID, nowPlayingMoviesList.get(i).getMovieID());
+            movieValues.put(MovieContract.NowPlayingMovieEntry.COLUMN_TITLE, nowPlayingMoviesList.get(i).getTitle());
+            movieValues.put(MovieContract.NowPlayingMovieEntry.COLUMN_IMAGEURL, nowPlayingMoviesList.get(i).getPosterPath());
+            movieValues.put(MovieContract.NowPlayingMovieEntry.COLUMN_PLOT, nowPlayingMoviesList.get(i).getOverview());
+            movieValues.put(MovieContract.NowPlayingMovieEntry.COLUMN_RATING, nowPlayingMoviesList.get(i).getVoteAverage());
+            movieValues.put(MovieContract.NowPlayingMovieEntry.COLUMN_RELEASEDATE, nowPlayingMoviesList.get(i).getReleaseDate());
 
-                String title;
-                String posterUrl;
-                String plot;
-                String rating;
-                String releaseDate;
-                String movieId;
+            Log.d(LOG_TAG,nowPlayingMoviesList.get(i).getTitle());
 
-                JSONObject movieResults = movieArray.getJSONObject(i);
+            cVVector.add(movieValues);
 
-                title = movieResults.getString(MDB_TITLE);
-                posterUrl = movieResults.getString(MDB_POSTER);
-                plot = movieResults.getString(MDB_OVERVIEW);
-                rating = movieResults.getString(MDB_RATING);
-                releaseDate = movieResults.getString(MDB_RELEASE_DATE);
-                movieId = movieResults.getString(MDB_MOVIE_ID);
-
-                ContentValues movieValues = new ContentValues();
-                movieValues.put(MovieContract.MovieEntry.COLUMN_SORTBY_KEY, sortById);
-                movieValues.put(MovieContract.MovieEntry.COLUMN_MOVIE_ID, movieId);
-                movieValues.put(MovieContract.MovieEntry.COLUMN_TITLE, title);
-                movieValues.put(MovieContract.MovieEntry.COLUMN_IMAGE_URL, posterUrl);
-                movieValues.put(MovieContract.MovieEntry.COLUMN_PLOT, plot);
-                movieValues.put(MovieContract.MovieEntry.COLUMN_RATING, rating);
-                movieValues.put(MovieContract.MovieEntry.COLUMN_RELEASE_DATE, releaseDate);
-
-                cVVector.add(movieValues);
-            }
-
-            int inserted = 0;
-
-            // add to database
-            if (cVVector.size() > 0) {
-                ContentValues[] cvArray = new ContentValues[cVVector.size()];
-                cVVector.toArray(cvArray);
-                getContext().getContentResolver().delete(MovieContract.MovieEntry.CONTENT_URI,null,null);
-                getContext().getContentResolver().bulkInsert(MovieContract.MovieEntry.CONTENT_URI, cvArray);
-            }
-
-        } catch (JSONException e) {
-            Log.e(LOG_TAG, e.getMessage(), e);
-            e.printStackTrace();
         }
+
+        // add to database
+        if (cVVector.size() > 0) {
+            ContentValues[] cvArray = new ContentValues[cVVector.size()];
+            cVVector.toArray(cvArray);
+            getContext().getContentResolver().delete(MovieContract.NowPlayingMovieEntry.CONTENT_URI,null,null);
+            getContext().getContentResolver().bulkInsert(MovieContract.NowPlayingMovieEntry.CONTENT_URI, cvArray);
+        }
+
+    }
+
+    private void getMovieDataFromGSON(String response, String sortBy)
+            throws JSONException {
+
+        long sortById = addSortBy(sortBy);
+
+        Gson gson = new GsonBuilder().create();
+        MovieDBResponse movieDBResponse = gson.fromJson(response,MovieDBResponse.class);
+        List<Movies> moviesList = new ArrayList<>();
+        if(!moviesList.isEmpty()){moviesList.clear();}
+        moviesList = movieDBResponse.getList();
+
+
+        Vector<ContentValues> cVVector = new Vector<>(moviesList.size());
+
+        Log.d(LOG_TAG,Integer.toString(moviesList.size()));
+
+        for(int i = 0; i < moviesList.size(); i++){
+
+            ContentValues movieValues = new ContentValues();
+            movieValues.put(MovieContract.MovieEntry.COLUMN_SORTBY_KEY, sortById);
+            movieValues.put(MovieContract.MovieEntry.COLUMN_MOVIE_ID, moviesList.get(i).getMovieID());
+            movieValues.put(MovieContract.MovieEntry.COLUMN_TITLE, moviesList.get(i).getTitle());
+            movieValues.put(MovieContract.MovieEntry.COLUMN_IMAGE_URL, moviesList.get(i).getPosterPath());
+            movieValues.put(MovieContract.MovieEntry.COLUMN_PLOT, moviesList.get(i).getOverview());
+            movieValues.put(MovieContract.MovieEntry.COLUMN_RATING, moviesList.get(i).getVoteAverage());
+            movieValues.put(MovieContract.MovieEntry.COLUMN_RELEASE_DATE, moviesList.get(i).getReleaseDate());
+
+            Log.d(LOG_TAG,moviesList.get(i).getTitle());
+
+            cVVector.add(movieValues);
+
+        }
+
+        // add to database
+        if (cVVector.size() > 0) {
+            ContentValues[] cvArray = new ContentValues[cVVector.size()];
+            cVVector.toArray(cvArray);
+            getContext().getContentResolver().delete(MovieContract.MovieEntry.CONTENT_URI,null,null);
+            getContext().getContentResolver().bulkInsert(MovieContract.MovieEntry.CONTENT_URI, cvArray);
+        }
+
     }
 
     // First, check if the sort by exist in the database.
-    long addSortBy(String sortBy) {
+    private long addSortBy(String sortBy) {
 
         long sortId;
 
@@ -177,7 +211,7 @@ public class FilmphoSyncAdapter extends AbstractThreadedSyncAdapter {
     /**
      * Helper method to schedule the sync adapter periodic execution.
      */
-    public static void configurePeriodicSync(Context context, int syncInterval, int flexTime){
+    private static void configurePeriodicSync(Context context, int syncInterval, int flexTime){
         Account account = getSyncAccount(context);
         String authority = context.getString(R.string.content_authority);
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
@@ -215,7 +249,7 @@ public class FilmphoSyncAdapter extends AbstractThreadedSyncAdapter {
      * @param context The context used to access the account service
      * @return a fake account.
      */
-    public static Account getSyncAccount(Context context) {
+    private static Account getSyncAccount(Context context) {
         // Get an instance of the Android account manager
         AccountManager accountManager =
                 (AccountManager) context.getSystemService(Context.ACCOUNT_SERVICE);

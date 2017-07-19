@@ -25,6 +25,32 @@ public class MovieContract {
     public static final String PATH_SORTBY = "sortBy";
     public static final String PATH_MOVIE = "movie";
     public static final String PATH_FAVORITE = "favorites";
+    public static final String PATH_NOW_PLAYING = "now_playing";
+
+    /** Now playing movie entries */
+    public static final class NowPlayingMovieEntry implements BaseColumns{
+
+        public static final Uri CONTENT_URI =
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_NOW_PLAYING).build();
+
+        public static final String CONTENT_TYPE =
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_NOW_PLAYING;
+        public static final String CONTENT_ITEM_TYPE =
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_NOW_PLAYING;
+
+        public static final String TABLE_NAME = "now_playing";
+        public static final String COLUMN_MOVIEID = "movie_id";
+        public static final String COLUMN_TITLE = "title";
+        public static final String COLUMN_PLOT = "plot";
+        public static final String COLUMN_RATING = "rating";
+        public static final String COLUMN_RELEASEDATE = "release_date";
+        public static final String COLUMN_IMAGEURL = "poster";
+
+        public static Uri buildNowPlayingUri(long id){
+            return ContentUris.withAppendedId(CONTENT_URI,id);
+        }
+    }
+
 
     /** Favorite movie entries */
     public static final class FavoriteMovieEntry implements BaseColumns{

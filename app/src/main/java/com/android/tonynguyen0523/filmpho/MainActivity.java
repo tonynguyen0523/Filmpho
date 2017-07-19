@@ -3,11 +3,24 @@ package com.android.tonynguyen0523.filmpho;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.PopupMenu;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.android.tonynguyen0523.filmpho.sync.FilmphoSyncAdapter;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity implements MovieFragment.CallBack{
 
@@ -15,12 +28,15 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.Cal
     private String mSortBy;
     private boolean mTwoPane;
 
+    @BindView(R.id.popular_button)Button mButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // Get preferred sort.
         mSortBy = Utility.getPreferredSortBy(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
 
         // Check for two pane
         if(findViewById(R.id.movie_detail_container) != null) {
@@ -35,6 +51,47 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.Cal
         } else {
             mTwoPane = false;
         }
+
+        mButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PopupMenu popupMenu = new PopupMenu(MainActivity.this,mButton);
+                popupMenu.getMenuInflater()
+                        .inflate(R.menu.menu_sort, popupMenu.getMenu());
+
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+
+                    MovieFragment mf = (MovieFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_movie);
+
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        int id = item.getItemId();
+                        switch (id){
+                            case R.id.action_popular:
+                                mButton.setText("Popular");
+                                if(null != mf){
+                                    Utility.setSortBy(MainActivity.this,"popular");
+                                    mf.onSortByChanged();
+                                }
+                                break;
+                            case R.id.action_top_rated:
+                                mButton.setText("Top Rated");
+                                if(null != mf){
+                                    Utility.setSortBy(MainActivity.this,"top_rated");
+                                    mf.onSortByChanged();
+                                }
+                                break;
+                            default:
+                                break;
+                        }
+                        return false;
+                    }
+                });
+                popupMenu.show();
+            }
+        });
+
+
 
         // Launch SyncAdapter
         FilmphoSyncAdapter.initializeSyncAdapter(this);
@@ -87,6 +144,7 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.Cal
             mSortBy = sortBy;
         }
     }
+
 
     @Override
     public void onItemSelected(Uri contentUri, String resourceId){

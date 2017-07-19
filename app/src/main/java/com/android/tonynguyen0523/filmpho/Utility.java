@@ -17,13 +17,26 @@ import java.net.URL;
 
 public class Utility {
 
+    private static final String SORT_BY = "sort_by";
     /**
      * Get preferred sort by
      */
     public static String getPreferredSortBy(Context context) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        return prefs.getString(context.getString(R.string.pref_sort_key),
-                context.getString(R.string.popular_sort_value));
+//        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+//        return prefs.getString(context.getString(R.string.pref_sort_key),
+//                context.getString(R.string.popular_sort_value));
+        SharedPreferences sharedPreferences = context.getSharedPreferences(
+                context.getString(R.string.pref_sort_key), Context.MODE_PRIVATE);
+        return sharedPreferences.getString(SORT_BY, "popular");
+
+    }
+
+    static void setSortBy(Context context, String sortBy){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(
+                context.getString(R.string.pref_sort_key),Context.MODE_PRIVATE);
+        SharedPreferences.Editor spe = sharedPreferences.edit();
+        spe.putString(SORT_BY,sortBy);
+        spe.apply();
     }
 
     /**

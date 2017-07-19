@@ -11,6 +11,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -59,13 +60,11 @@ public class MovieFragment extends Fragment implements LoaderManager.LoaderCallb
     /**
      * View Resources
      */
-    @BindView(R.id.movie_sortBy_header)
-    TextView sortByTV;
     @Nullable
     @BindView(R.id.movie_recycler_grid_view)
     RecyclerView mRecyclerView;
 
-    private MovieRecyclerGridAdapter mRecyclerAdapter;
+    private MovieFragmentAdapter mRecyclerAdapter;
     private Unbinder unbinder;
 
     /** Save position variables */
@@ -100,16 +99,22 @@ public class MovieFragment extends Fragment implements LoaderManager.LoaderCallb
             gridSpan = 2;
         }
 
-        // Initiate adapter and set adapter and LayoutManager
-        mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), gridSpan));
-        mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.addItemDecoration(new GridSpacingItemDecoration(gridSpan, GridSpacingItemDecoration.dpToPx(getContext(), 10), true));
-        mRecyclerAdapter = new MovieRecyclerGridAdapter(getContext(), null);
+//        // Initiate adapter and set adapter and LayoutManager
+//        mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), gridSpan));
+//        mRecyclerView.setHasFixedSize(true);
+////        mRecyclerView.addItemDecoration(new GridSpacingItemDecoration(gridSpan, GridSpacingItemDecoration.dpToPx(getContext(), 0), true));
+//        mRecyclerAdapter = new MovieNowPlayingAdapter(getContext(), null,false);
+//        mRecyclerView.setAdapter(mRecyclerAdapter);
+//        mRecyclerView.setNestedScrollingEnabled(false);
+
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false));
+        mRecyclerAdapter = new MovieFragmentAdapter(getContext(),null);
+        mRecyclerView.setNestedScrollingEnabled(false);
         mRecyclerView.setAdapter(mRecyclerAdapter);
 
         // Initiate RecyclerView click listener
         // to launch DetailActivity/DetailFragment.
-        mRecyclerAdapter.setOnItemClickListener(new MovieRecyclerGridAdapter.GridItemClickListener() {
+        mRecyclerAdapter.setOnItemClickListener(new MovieFragmentAdapter.GridItemClickListener() {
             @Override
             public void onGridItemClicked(View view, int position) {
 
@@ -189,6 +194,7 @@ public class MovieFragment extends Fragment implements LoaderManager.LoaderCallb
         String sortBy = Utility.getPreferredSortBy(getActivity());
         Uri movieForSortByUri = MovieContract.MovieEntry.buildMovieSortBy(sortBy);
 
+
         return new CursorLoader(getActivity(),
                 movieForSortByUri,
                 MOVIE_COLUMNS,
@@ -200,9 +206,6 @@ public class MovieFragment extends Fragment implements LoaderManager.LoaderCallb
 
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
-
-        String sortBy = Utility.getPreferredSortBy(getContext());
-        sortByTV.setText(Utility.sortToTextForm(sortBy));
 
         mRecyclerAdapter.swapCursor(cursor);
 

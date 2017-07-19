@@ -25,6 +25,9 @@
     <string name="movie_detail_container">movie_detail_container</string>
     <string name="no_reviews_available">No Reviews Available.</string>
 
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 
 </resources>
 
