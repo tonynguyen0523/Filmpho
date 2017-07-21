@@ -142,7 +142,7 @@ public class MovieProvider extends ContentProvider {
 
     private Cursor getNowPlayingByMovieId(Uri uri, String[] projection, String sortOrder){
 
-        String movieId = MovieContract.MovieEntry.getMovieIdFromUri(uri);
+        String movieId = MovieContract.MovieEntry.getNowPlayingMovieIdFromUri(uri);
 
         return mOpenHelper.getReadableDatabase().query(
                 MovieContract.NowPlayingMovieEntry.TABLE_NAME,

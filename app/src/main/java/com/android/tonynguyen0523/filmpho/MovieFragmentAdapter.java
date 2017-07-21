@@ -80,11 +80,11 @@ public class MovieFragmentAdapter extends CursorRecyclerViewAdapter<MovieFragmen
     public void onBindViewHolder(final ViewHolder viewHolder, final Cursor cursor) {
 
         String imageUrl = Utility.formatImageUrl(cursor.getString(MovieFragment.COL_MOVIE_IMAGEURL));
-        String position = Integer.toString(cursor.getInt(MovieFragment.COL_ROW_ID));
+        int position = cursor.getPosition();
         String title = cursor.getString(MovieFragment.COL_MOVIE_TITLE);
 
         viewHolder.mMovieTitle.setText(title);
-        viewHolder.mPositionNumber.setText(position);
+        viewHolder.mPositionNumber.setText(Integer.toString(position + 1));
 
         Picasso.with(mContext).load(imageUrl).into(viewHolder.mPosterImage, new Callback() {
             @Override

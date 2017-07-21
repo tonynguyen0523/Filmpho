@@ -49,6 +49,10 @@ public class MovieContract {
         public static Uri buildNowPlayingUri(long id){
             return ContentUris.withAppendedId(CONTENT_URI,id);
         }
+
+        public static  Uri BuildNowPlayingMovieWithMovieId(String movieId){
+            return CONTENT_URI.buildUpon().appendPath(movieId).build();
+        }
     }
 
 
@@ -149,6 +153,10 @@ public class MovieContract {
 
         public static String getMovieIdFromUri(Uri uri){
             return uri.getPathSegments().get(2);
+        }
+
+        public static String getNowPlayingMovieIdFromUri(Uri uri){
+            return uri.getPathSegments().get(1);
         }
     }
 }

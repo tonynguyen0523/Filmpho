@@ -7,7 +7,7 @@
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="250dp"
+        android:layout_height="225dp"
         android:layout_margin="10dp"
         card_view:cardCornerRadius="2dp">
 
@@ -16,18 +16,29 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:background="#0095a8">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
                 android:textStyle="bold"
+                android:textColor="#fff"
+                android:textSize="15sp"
+                android:paddingLeft="5dp"
+                android:paddingStart="5dp"
+                android:layout_gravity="center_vertical"
                 android:text="Now Playing"/>
+
+            </FrameLayout>
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/now_playing_recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp">
+                android:layout_margin="5dp">
 
             </android.support.v7.widget.RecyclerView>
         </LinearLayout>

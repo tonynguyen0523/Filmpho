@@ -95,6 +95,17 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             FavoriteMovieEntry.COLUMN_SORT_CATEGORY
     };
 
+    private static final String[] NOW_PLAYING = {
+
+            FavoriteMovieEntry._ID,
+            FavoriteMovieEntry.COLUMN_IMAGEURL,
+            FavoriteMovieEntry.COLUMN_MOVIEID,
+            FavoriteMovieEntry.COLUMN_TITLE,
+            FavoriteMovieEntry.COLUMN_PLOT,
+            FavoriteMovieEntry.COLUMN_RATING,
+            FavoriteMovieEntry.COLUMN_RELEASEDATE,
+    };
+
     static final int COL_ROW_ID = 0;
     static final int COL_MOVIE_IMAGEURL = 1;
     static final int COL_MOVIE_ID = 2;
@@ -145,6 +156,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     private String plot;
     private String rating;
     private String releaseDate;
+    private String table;
 
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
@@ -302,7 +314,8 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
             String movieEntryTable = "movie";
             String favoritesTable = "favorites";
-            String table = MovieContract.MovieEntry.getMovieTableFromUri(mUri);
+            String nowPlaying = "now_playing";
+            table = MovieContract.MovieEntry.getMovieTableFromUri(mUri);
 
             // Check which table to access.
             if (table.contains(movieEntryTable)) {
@@ -318,6 +331,14 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
                         getActivity(),
                         mUri,
                         FAVORITE_COLUMNS,
+                        null,
+                        null,
+                        null);
+            } else if( table.contains(nowPlaying)){
+                return new CursorLoader(
+                        getActivity(),
+                        mUri,
+                        NOW_PLAYING,
                         null,
                         null,
                         null);
@@ -367,7 +388,9 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
             if(mUri != null) {
                 // Create video url with current movie id.
-                String videoUrl = Utility.getVideosUrlWithId(MovieEntry.getMovieIdFromUri(mUri));
+                String videoUrl;
+                if(!table.contains("now_playing")) videoUrl = Utility.getVideosUrlWithId(MovieEntry.getMovieIdFromUri(mUri));
+                else videoUrl = Utility.getVideosUrlWithId(MovieEntry.getNowPlayingMovieIdFromUri(mUri));
 
                 // Get movie videos.
                 // JSON parse video url using Volley.

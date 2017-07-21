@@ -68,14 +68,14 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.Cal
                         int id = item.getItemId();
                         switch (id){
                             case R.id.action_popular:
-                                mButton.setText("Popular");
+                                mButton.setText("Most Popular Movies");
                                 if(null != mf){
                                     Utility.setSortBy(MainActivity.this,"popular");
                                     mf.onSortByChanged();
                                 }
                                 break;
                             case R.id.action_top_rated:
-                                mButton.setText("Top Rated");
+                                mButton.setText("Top Rated Movies");
                                 if(null != mf){
                                     Utility.setSortBy(MainActivity.this,"top_rated");
                                     mf.onSortByChanged();

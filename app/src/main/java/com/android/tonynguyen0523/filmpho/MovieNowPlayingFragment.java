@@ -74,6 +74,16 @@ public class MovieNowPlayingFragment extends Fragment implements LoaderManager.L
         mRecyclerAdapter = new MovieNowPlayingAdapter(getContext(),null);
         mRecyclerView.setAdapter(mRecyclerAdapter);
 
+        mRecyclerAdapter.setOnItemClickListener(new MovieNowPlayingAdapter.GridItemClickListener() {
+            @Override
+            public void onGridItemClicked(View view, int position) {
+                // Callback on click
+                String movieId = mRecyclerAdapter.getPosterMovieId(position);
+                ((MovieFragment.CallBack) getActivity()).onItemSelected(MovieContract.NowPlayingMovieEntry.BuildNowPlayingMovieWithMovieId(movieId),
+                        getString(R.string.movie_detail_container));
+            }
+        });
+
         return rootView;
     }
 
