@@ -1,4 +1,4 @@
-package com.android.tonynguyen0523.filmpho;
+package com.android.tonynguyen0523.filmpho.NowPlaying;
 
 import android.database.Cursor;
 import android.os.Bundle;
@@ -13,6 +13,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.android.tonynguyen0523.filmpho.Main.MovieFragment;
+import com.android.tonynguyen0523.filmpho.R;
 import com.android.tonynguyen0523.filmpho.data.MovieContract;
 
 import butterknife.BindView;
@@ -80,7 +82,7 @@ public class MovieNowPlayingFragment extends Fragment implements LoaderManager.L
                 // Callback on click
                 String movieId = mRecyclerAdapter.getPosterMovieId(position);
                 ((MovieFragment.CallBack) getActivity()).onItemSelected(MovieContract.NowPlayingMovieEntry.BuildNowPlayingMovieWithMovieId(movieId),
-                        getString(R.string.movie_detail_container));
+                        getString(R.string.movie_detail_container),true);
             }
         });
 

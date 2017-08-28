@@ -5,6 +5,9 @@ import android.database.Cursor;
 import android.database.DataSetObserver;
 import android.support.v7.widget.RecyclerView;
 
+import com.android.tonynguyen0523.filmpho.Favorite.FavoriteFragment;
+import com.android.tonynguyen0523.filmpho.Main.MovieFragment;
+
 public abstract class CursorRecyclerViewAdapter<VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH> {
 
     private Context mContext;

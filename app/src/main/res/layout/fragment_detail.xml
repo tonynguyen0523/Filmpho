@@ -1,48 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <RelativeLayout
         android:id="@+id/detail_relative_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="16dp">
+        android:layout_height="wrap_content">
 
-        <android.support.v7.widget.CardView
-            android:id="@+id/detail_card_view"
+        <FrameLayout
+            android:id="@+id/detail_frame_helper"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            card_view:cardCornerRadius="5dp">
+            android:layout_height="wrap_content">
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
+            <View
+                android:id="@+id/frame_helper"
+                android:layout_width="match_parent"
+                android:layout_height="225dp"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/video_recycler_view"
+            android:layout_width="match_parent"
+            android:background="#000"
+            android:layout_height="250dp"/>
+
+                <View
+                    android:id="@+id/frame_helper2"
+                    android:layout_width="match_parent"
+                    android:layout_height="10dp"
+                    android:layout_below="@id/frame_helper"/>
+
+            <ImageView
+                android:id="@+id/detail_poster_imageview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/frame_helper"
+                android:focusableInTouchMode="true"
+                android:paddingLeft="8dp"
+                tools:layout_height="200dp"
+                tools:layout_width="150dp" />
+
+                <View
+                    android:id="@+id/under_poster_border"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/colorPrimary"
+                    android:layout_margin="10dp"
+                    android:layout_below="@id/detail_poster_imageview"/>
+
+
                 <TextView
                     android:id="@+id/detail_title_textview"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-
                     android:paddingBottom="8dp"
                     android:paddingLeft="8dp"
                     android:textColor="@color/colorPrimary"
                     android:textSize="25sp"
                     android:textStyle="bold"
+                    android:background="#0095a8"
+                    android:layout_below="@id/frame_helper2"
+                    android:layout_toRightOf="@id/detail_poster_imageview"
+                    android:layout_toEndOf="@id/detail_poster_imageview"
                     tools:text="Moana" />
-
-                <ImageView
-                    android:id="@+id/detail_poster_imageview"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/detail_title_textview"
-                    android:focusableInTouchMode="true"
-                    android:paddingLeft="8dp"
-                    tools:layout_height="200dp"
-                    tools:layout_width="150dp" />
-
 
                 <TextView
                     android:id="@+id/detail_release_date_textview"
@@ -50,7 +75,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/detail_title_textview"
                     android:layout_toRightOf="@id/detail_poster_imageview"
-                    android:paddingLeft="16dp"
+                    android:paddingLeft="8dp"
                     android:textColor="@color/colorPrimary"
                     android:textSize="25sp"
                     tools:text="1991" />
@@ -59,88 +84,51 @@
                     android:id="@+id/detail_rating_textview"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/detail_release_date_textview"
-                    android:layout_toRightOf="@id/detail_poster_imageview"
-                    android:paddingLeft="16dp"
+                    android:layout_below="@id/detail_title_textview"
+                    android:layout_toRightOf="@id/detail_release_date_textview"
+                    android:layout_marginLeft="8dp"
+                    android:gravity="center"
                     tools:text="1.22" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/detail_release_date_textview"
+                    android:layout_below="@id/detail_title_textview"
                     android:layout_toRightOf="@id/detail_rating_textview"
                     android:text="@string/_10" />
-
 
                 <ToggleButton
                     android:id="@+id/favorite_toggle"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:layout_below="@id/detail_rating_textview"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginLeft="16dp"
+                    android:layout_below="@id/detail_release_date_textview"
                     android:layout_toRightOf="@id/detail_poster_imageview"
                     android:background="@drawable/favorite_toggle_selector"
+                    android:layout_marginLeft="8dp"
                     android:textOff=""
                     android:textOn="" />
-
-
-
-                <Button
-                    android:id="@+id/review_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/favorite_toggle"
-                    android:layout_marginLeft="8dp"
-                    android:layout_toRightOf="@id/detail_poster_imageview"
-                    android:background="@android:color/transparent"
-                    android:text="@string/reviews" />
 
                 <TextView
                     android:id="@+id/detail_plot_textview"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/detail_poster_imageview"
+                    android:layout_below="@id/under_poster_border"
                     android:padding="8dp"
                     android:paddingTop="8dp"
                     android:textColor="@color/colorPrimaryDark"
                     tools:text="ploerlkjadhflkafekhfaileufhalefhalweifhakljfhdaslkhf" />
 
-            </RelativeLayout>
-        </android.support.v7.widget.CardView>
-
-        <TextView
-            android:id="@+id/video_header"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/detail_card_view"
-            android:padding="8dp"
-            android:text="@string/videos"
-            android:textColor="@color/colorPrimary"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-
-        <android.support.v7.widget.CardView
-            android:id="@+id/detail_video_card"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/video_header"
-            card_view:cardCornerRadius="5dp">
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/video_recycler_view"
+                <View
+                    android:id="@+id/under_plot_border"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                </android.support.v7.widget.RecyclerView>
+                    android:layout_height="1dp"
+                    android:background="@color/colorPrimary"
+                    android:layout_margin="10dp"
+                    android:layout_below="@id/detail_plot_textview"/>
 
             </RelativeLayout>
 
-        </android.support.v7.widget.CardView>
 
+        </FrameLayout>
     </RelativeLayout>
 </ScrollView>

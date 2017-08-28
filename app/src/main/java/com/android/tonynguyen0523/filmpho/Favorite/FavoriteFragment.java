@@ -1,4 +1,4 @@
-package com.android.tonynguyen0523.filmpho;
+package com.android.tonynguyen0523.filmpho.Favorite;
 
 import android.content.res.Configuration;
 import android.database.Cursor;
@@ -18,6 +18,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.android.tonynguyen0523.filmpho.Detail.DetailFragment;
+import com.android.tonynguyen0523.filmpho.GridSpacingItemDecoration;
+import com.android.tonynguyen0523.filmpho.R;
+import com.android.tonynguyen0523.filmpho.Review.ReviewFragment;
 import com.android.tonynguyen0523.filmpho.data.MovieContract;
 import com.android.tonynguyen0523.filmpho.data.MovieContract.FavoriteMovieEntry;
 import com.android.tonynguyen0523.filmpho.data.MovieDbHelper;
@@ -47,14 +51,14 @@ public class FavoriteFragment extends Fragment implements LoaderManager.LoaderCa
             FavoriteMovieEntry.COLUMN_SORT_CATEGORY
     };
 
-    static final int COL_ROW_ID = 0;
-    static final int COL_MOVIE_ID = 1;
-    static final int COL_MOVIE_TITLE = 2;
-    static final int COL_MOVIE_PLOT = 3;
-    static final int COL_MOVIE_IMAGEURL = 4;
-    static final int COL_MOVIE_RATING = 5;
-    static final int COL_MOVIE_RELEAST_DATE = 6;
-    static final int COL_MOVIE_SORT_CATEGORY = 7;
+    public static final int COL_ROW_ID = 0;
+    public static final int COL_MOVIE_ID = 1;
+    public static final int COL_MOVIE_TITLE = 2;
+    public static final int COL_MOVIE_PLOT = 3;
+    public static final int COL_MOVIE_IMAGEURL = 4;
+    public static final int COL_MOVIE_RATING = 5;
+    public static final int COL_MOVIE_RELEAST_DATE = 6;
+    public static final int COL_MOVIE_SORT_CATEGORY = 7;
 
     /** View resources */
     @BindView(R.id.favorite_recycler_view)RecyclerView mRecyclerView;
@@ -94,6 +98,7 @@ public class FavoriteFragment extends Fragment implements LoaderManager.LoaderCa
         mRecyclerAdapter = new FavoriteRecyclerListAdapter(getContext(),null);
         mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(),gridSpan));
         mRecyclerView.addItemDecoration(new GridSpacingItemDecoration(gridSpan, GridSpacingItemDecoration.dpToPx(getContext(),10),true));
+        mRecyclerView.setNestedScrollingEnabled(false);
         mRecyclerView.setAdapter(mRecyclerAdapter);
 
         // Initialize RecyclerView click listener.
@@ -107,7 +112,6 @@ public class FavoriteFragment extends Fragment implements LoaderManager.LoaderCa
                 String sortCategory = mRecyclerAdapter.getFavoriteMovieSortCategory(position);
                 Uri uri = MovieContract.FavoriteMovieEntry.buildFavoriteMovieWithSortAndMovieId(sortCategory,movieId);
 
-
                 Bundle args = new Bundle();
                 args.putParcelable(DetailFragment.DETAIL_URI, uri);
                 args.putString(DetailFragment.REPLACE_FRAGMENT, getString(R.string.favorite_movie_containter));
@@ -117,6 +121,7 @@ public class FavoriteFragment extends Fragment implements LoaderManager.LoaderCa
 
                 final FragmentTransaction ft = getFragmentManager().beginTransaction();
                 ft.replace(R.id.favorite_movie_container, detailFragment);
+                ft.replace(R.id.favorite_review_container, ReviewFragment.newInstance(uri,false));
                 ft.addToBackStack(null);
                 ft.commit();
             }

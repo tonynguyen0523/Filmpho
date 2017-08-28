@@ -1,4 +1,4 @@
-package com.android.tonynguyen0523.filmpho;
+package com.android.tonynguyen0523.filmpho.Detail;
 
 import android.content.Context;
 import android.content.Intent;
@@ -13,8 +13,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
+import com.android.tonynguyen0523.filmpho.R;
+import com.android.tonynguyen0523.filmpho.Utility;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
@@ -39,8 +40,8 @@ public class VideoRecyclerAdapter extends RecyclerView.Adapter<VideoRecyclerAdap
     private ShareActionProvider mShareActionProvider;
 
     public class ViewHolder extends RecyclerView.ViewHolder{
-        @BindView(R.id.video_type) TextView mVideoType;
-        @BindView(R.id.video_title) TextView mVideoTitle;
+//        @BindView(R.id.video_type) TextView mVideoType;
+//        @BindView(R.id.video_title) TextView mVideoTitle;
         @BindView(R.id.video_menu) ImageView mVideoMenu;
         @BindView(R.id.video_thumbnail) ImageView mVideoThumbnail;
 
@@ -80,8 +81,8 @@ public class VideoRecyclerAdapter extends RecyclerView.Adapter<VideoRecyclerAdap
             String name = jsonObject.getString(MDB_VIDEO_NAME);
 
             // Set Strings to correct resource item.
-            holder.mVideoType.setText(type);
-            holder.mVideoTitle.setText(name);
+//            holder.mVideoType.setText(type);
+//            holder.mVideoTitle.setText(name);
 
             // Get url for video youtube thumbnail,
             // and set to image view.

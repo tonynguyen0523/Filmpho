@@ -53,6 +53,10 @@ public class MovieContract {
         public static  Uri BuildNowPlayingMovieWithMovieId(String movieId){
             return CONTENT_URI.buildUpon().appendPath(movieId).build();
         }
+
+        public static  Uri BuildNowPlayingMovieWithSortAndMovieId(String sort, String movieId){
+            return CONTENT_URI.buildUpon().appendPath(sort).appendPath(movieId).build();
+        }
     }
 
 

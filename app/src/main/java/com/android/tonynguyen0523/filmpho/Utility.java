@@ -31,7 +31,7 @@ public class Utility {
 
     }
 
-    static void setSortBy(Context context, String sortBy){
+    public static void setSortBy(Context context, String sortBy){
         SharedPreferences sharedPreferences = context.getSharedPreferences(
                 context.getString(R.string.pref_sort_key),Context.MODE_PRIVATE);
         SharedPreferences.Editor spe = sharedPreferences.edit();
@@ -103,7 +103,7 @@ public class Utility {
     /**
      * Create url by movie id to retrieve and display selected movie review.
      */
-    static String getReviewUrlWithId(String movieId) {
+    public static String getReviewUrlWithId(String movieId) {
 
         final String BASE_URL = "http://api.themoviedb.org/3/movie/" + movieId + "/reviews?";
         final String APIKEY_PARAM = "api_key";

@@ -1,4 +1,4 @@
-package com.android.tonynguyen0523.filmpho;
+package com.android.tonynguyen0523.filmpho.Favorite;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -9,6 +9,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.tonynguyen0523.filmpho.CursorRecyclerViewAdapter;
+import com.android.tonynguyen0523.filmpho.R;
+import com.android.tonynguyen0523.filmpho.Utility;
 import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;

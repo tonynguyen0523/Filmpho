@@ -1,4 +1,4 @@
-package com.android.tonynguyen0523.filmpho;
+package com.android.tonynguyen0523.filmpho.Main;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -8,7 +8,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
+import com.android.tonynguyen0523.filmpho.CursorRecyclerViewAdapter;
+import com.android.tonynguyen0523.filmpho.R;
+import com.android.tonynguyen0523.filmpho.Utility;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -19,23 +23,23 @@ import butterknife.ButterKnife;
  * Created by tonynguyen on 1/28/17.
  */
 
-public class MovieNowPlayingAdapter extends CursorRecyclerViewAdapter<MovieNowPlayingAdapter.ViewHolder> {
+public class MovieFragmentAdapter extends CursorRecyclerViewAdapter<MovieFragmentAdapter.ViewHolder> {
 
     private Context mContext;
-    private boolean isNowPlaying;
     private GridItemClickListener listener;
 
-    MovieNowPlayingAdapter(Context context, Cursor cursor){
+    MovieFragmentAdapter(Context context, Cursor cursor){
         super(context,cursor);
         mContext = context;
-        this.isNowPlaying = isNowPlaying;
-
     }
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         @BindView(R.id.movie_poster_grid_item) ImageView mPosterImage;
-        @BindView(R.id.poster_progress_bar)ProgressBar mProgressBar;
+        @BindView(R.id.movie_position_number)
+        TextView mPositionNumber;
+        @BindView(R.id.movie_card_title) TextView mMovieTitle;
+        @BindView(R.id.movie_progress_bar)ProgressBar mProgressBar;
 
         ViewHolder(View view) {
             super(view);
@@ -68,7 +72,7 @@ public class MovieNowPlayingAdapter extends CursorRecyclerViewAdapter<MovieNowPl
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_movie_now_playing_recycler_item,parent,false);
+                .inflate(R.layout.fragment_movie_recycler_item,parent,false);
 
         final ViewHolder vh = new ViewHolder(itemView);
 
@@ -78,8 +82,12 @@ public class MovieNowPlayingAdapter extends CursorRecyclerViewAdapter<MovieNowPl
     @Override
     public void onBindViewHolder(final ViewHolder viewHolder, final Cursor cursor) {
 
+        String imageUrl = Utility.formatImageUrl(cursor.getString(MovieFragment.COL_MOVIE_IMAGEURL));
+        int position = cursor.getPosition();
+        String title = cursor.getString(MovieFragment.COL_MOVIE_TITLE);
 
-        String imageUrl = Utility.formatImageUrl(cursor.getString(MovieNowPlayingFragment.COL_MOVIE_IMAGEURL));
+        viewHolder.mMovieTitle.setText(title);
+        viewHolder.mPositionNumber.setText(Integer.toString(position + 1));
 
         Picasso.with(mContext).load(imageUrl).into(viewHolder.mPosterImage, new Callback() {
             @Override

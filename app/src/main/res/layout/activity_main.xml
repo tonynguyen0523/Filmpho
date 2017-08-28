@@ -13,7 +13,7 @@
 
     <fragment
         android:id="@+id/fragment_now_playing"
-        android:name="com.android.tonynguyen0523.filmpho.MovieNowPlayingFragment"
+        android:name="com.android.tonynguyen0523.filmpho.NowPlaying.MovieNowPlayingFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:layout="@layout/fragment_movie_now_playing" />
@@ -33,7 +33,7 @@
 
     <fragment
         android:id="@+id/fragment_movie"
-        android:name="com.android.tonynguyen0523.filmpho.MovieFragment"
+        android:name="com.android.tonynguyen0523.filmpho.Main.MovieFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:layout="@layout/fragment_movie" />

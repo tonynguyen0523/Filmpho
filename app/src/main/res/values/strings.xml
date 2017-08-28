@@ -27,6 +27,9 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="most_pop_movie">Most Popular Movies</string>
+    <string name="top_movies">Top Rated Movies</string>
+    <string name="isNowPlaying">isNowPlaying</string>
 
 
 </resources>

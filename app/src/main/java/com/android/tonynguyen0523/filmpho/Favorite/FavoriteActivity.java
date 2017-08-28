@@ -1,7 +1,9 @@
-package com.android.tonynguyen0523.filmpho;
+package com.android.tonynguyen0523.filmpho.Favorite;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import com.android.tonynguyen0523.filmpho.R;
 
 public class FavoriteActivity extends AppCompatActivity {
 

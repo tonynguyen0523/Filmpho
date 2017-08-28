@@ -1,4 +1,4 @@
-package com.android.tonynguyen0523.filmpho;
+package com.android.tonynguyen0523.filmpho.Review;
 
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,6 +15,10 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.android.tonynguyen0523.filmpho.GridSpacingItemDecoration;
+import com.android.tonynguyen0523.filmpho.MySingleton;
+import com.android.tonynguyen0523.filmpho.R;
+import com.android.tonynguyen0523.filmpho.Utility;
 import com.android.tonynguyen0523.filmpho.data.MovieContract;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -39,6 +43,8 @@ public class ReviewFragment extends Fragment {
 
     static final String REVIEW_URI = "URI";
 
+    static final String IS_NOW_PLAYING = "isNowPlaying";
+
     private ArrayList<String> reviewList;
 
     @Nullable
@@ -54,10 +60,26 @@ public class ReviewFragment extends Fragment {
     @BindView(R.id.review_progress_bar)
     ProgressBar mProgressBar;
     private Unbinder unbinder;
-
     private Uri mUri;
+    private Boolean isNowPlaying;
+
+    public static ReviewFragment newInstance(Uri uri,Boolean isNowPlaying){
+        ReviewFragment fragment = new ReviewFragment();
+        Bundle args = new Bundle();
+        args.putParcelable(REVIEW_URI,uri);
+        args.putBoolean(IS_NOW_PLAYING,isNowPlaying);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     public ReviewFragment() {
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mUri = getArguments().getParcelable(REVIEW_URI);
+        isNowPlaying = getArguments().getBoolean(IS_NOW_PLAYING);
     }
 
     @Override
@@ -79,13 +101,20 @@ public class ReviewFragment extends Fragment {
         assert mRecyclerView != null;
         mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 1));
         mRecyclerView.addItemDecoration(new GridSpacingItemDecoration(1, GridSpacingItemDecoration.dpToPx(getContext(), 10), true));
+        mRecyclerView.setNestedScrollingEnabled(false);
 
         // Initiate ArrayList.
         reviewList = new ArrayList<>();
         // Make sure ArrayList is clear.
 
         // Get movie id from uri to retrieve review data.
-        final String movieId = MovieContract.MovieEntry.getMovieIdFromUri(mUri);
+        final String movieId;
+        if(isNowPlaying){
+            movieId = MovieContract.MovieEntry.getNowPlayingMovieIdFromUri(mUri);
+        } else {
+            movieId = MovieContract.MovieEntry.getMovieIdFromUri(mUri);
+        }
+
         if (movieId != null && Utility.hasInternet(getContext())) {
             getReviewData(movieId);
         } else {
