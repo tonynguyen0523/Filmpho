@@ -40,8 +40,6 @@ public class VideoRecyclerAdapter extends RecyclerView.Adapter<VideoRecyclerAdap
     private ShareActionProvider mShareActionProvider;
 
     public class ViewHolder extends RecyclerView.ViewHolder{
-//        @BindView(R.id.video_type) TextView mVideoType;
-//        @BindView(R.id.video_title) TextView mVideoTitle;
         @BindView(R.id.video_menu) ImageView mVideoMenu;
         @BindView(R.id.video_thumbnail) ImageView mVideoThumbnail;
 
@@ -79,10 +77,6 @@ public class VideoRecyclerAdapter extends RecyclerView.Adapter<VideoRecyclerAdap
             final String key = jsonObject.getString(MDB_VIDEO_KEY);
             String type = jsonObject.getString(MDB_VIDEO_TYPE);
             String name = jsonObject.getString(MDB_VIDEO_NAME);
-
-            // Set Strings to correct resource item.
-//            holder.mVideoType.setText(type);
-//            holder.mVideoTitle.setText(name);
 
             // Get url for video youtube thumbnail,
             // and set to image view.

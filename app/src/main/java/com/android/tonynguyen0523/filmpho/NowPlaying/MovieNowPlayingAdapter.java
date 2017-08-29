@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.android.tonynguyen0523.filmpho.CursorRecyclerViewAdapter;
 import com.android.tonynguyen0523.filmpho.R;
@@ -25,20 +26,19 @@ import butterknife.ButterKnife;
 public class MovieNowPlayingAdapter extends CursorRecyclerViewAdapter<MovieNowPlayingAdapter.ViewHolder> {
 
     private Context mContext;
-    private boolean isNowPlaying;
     private GridItemClickListener listener;
 
     MovieNowPlayingAdapter(Context context, Cursor cursor){
         super(context,cursor);
         mContext = context;
-        this.isNowPlaying = isNowPlaying;
-
     }
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         @BindView(R.id.movie_poster_grid_item) ImageView mPosterImage;
         @BindView(R.id.poster_progress_bar)ProgressBar mProgressBar;
+        @BindView(R.id.movie_title)TextView mTitle;
+        @BindView(R.id.movie_rating)TextView mRating;
 
         ViewHolder(View view) {
             super(view);
@@ -83,6 +83,11 @@ public class MovieNowPlayingAdapter extends CursorRecyclerViewAdapter<MovieNowPl
 
 
         String imageUrl = Utility.formatImageUrl(cursor.getString(MovieNowPlayingFragment.COL_MOVIE_IMAGEURL));
+        String title = cursor.getString(MovieNowPlayingFragment.COL_MOVIE_TITLE);
+        String rating = cursor.getString(MovieNowPlayingFragment.COL_MOVIE_RATING);
+
+        viewHolder.mTitle.setText(title);
+        viewHolder.mRating.setText(mContext.getString(R.string.rating,rating));
 
         Picasso.with(mContext).load(imageUrl).into(viewHolder.mPosterImage, new Callback() {
             @Override
