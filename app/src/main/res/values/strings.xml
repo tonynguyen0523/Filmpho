@@ -24,7 +24,7 @@
     <string name="favorite_movie_containter">favorite_movie_container</string>
     <string name="movie_detail_container">movie_detail_container</string>
     <string name="no_reviews_available">No Reviews Available.</string>
-    <string name="rating">Rating: %1$s</string>
+    <string name="rating">%1$s</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

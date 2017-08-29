@@ -5,8 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="1dp"
-    card_view:cardCornerRadius="0dp">
+    android:layout_marginBottom="1dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -42,6 +41,18 @@
                 android:textStyle="bold"
                 android:layout_alignParentTop="true"
                 tools:text="Planet of the Apes"/>
+
+            <RatingBar
+                android:id="@+id/movie_rating_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/movie_card_title"
+                android:numStars="10"
+                android:stepSize="0.1"
+                android:isIndicator="true"
+                android:progressTint="@color/tint"
+                android:secondaryProgressTint="#00000000"
+                style="?android:attr/ratingBarStyleSmall"/>
 
         </RelativeLayout>
 

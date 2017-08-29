@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.android.tonynguyen0523.filmpho.CursorRecyclerViewAdapter;
@@ -40,6 +41,7 @@ public class MovieFragmentAdapter extends CursorRecyclerViewAdapter<MovieFragmen
         TextView mPositionNumber;
         @BindView(R.id.movie_card_title) TextView mMovieTitle;
         @BindView(R.id.movie_progress_bar)ProgressBar mProgressBar;
+        @BindView(R.id.movie_rating_bar)RatingBar mRatingBar;
 
         ViewHolder(View view) {
             super(view);
@@ -85,9 +87,11 @@ public class MovieFragmentAdapter extends CursorRecyclerViewAdapter<MovieFragmen
         String imageUrl = Utility.formatImageUrl(cursor.getString(MovieFragment.COL_MOVIE_IMAGEURL));
         int position = cursor.getPosition();
         String title = cursor.getString(MovieFragment.COL_MOVIE_TITLE);
+        String rating = cursor.getString(MovieFragment.COL_MOVIE_RATING);
 
         viewHolder.mMovieTitle.setText(title);
         viewHolder.mPositionNumber.setText(Integer.toString(position + 1));
+        viewHolder.mRatingBar.setRating(Float.parseFloat(rating));
 
         Picasso.with(mContext).load(imageUrl).into(viewHolder.mPosterImage, new Callback() {
             @Override
