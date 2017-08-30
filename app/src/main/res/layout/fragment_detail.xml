@@ -38,7 +38,7 @@
             <ImageView
                 android:id="@+id/detail_poster_imageview"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="175dp"
                 android:layout_below="@id/frame_helper"
                 android:focusableInTouchMode="true"
                 android:paddingLeft="8dp"

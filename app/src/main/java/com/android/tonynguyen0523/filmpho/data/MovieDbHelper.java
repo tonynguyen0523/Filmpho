@@ -16,7 +16,7 @@ import static com.android.tonynguyen0523.filmpho.data.MovieContract.MovieEntry;
 
 public class MovieDbHelper extends SQLiteOpenHelper{
 
-    private static final int DATABASE_VERSION = 5;
+    private static final int DATABASE_VERSION = 7;
 
     public static final String DATABASE_NAME = "movie.db";
 
@@ -35,7 +35,7 @@ public class MovieDbHelper extends SQLiteOpenHelper{
                 + MovieEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + MovieEntry.COLUMN_SORTBY_KEY + " TEXT NOT NULL,"
                 + MovieEntry.COLUMN_TITLE + " TEXT NOT NULL,"
-                + MovieEntry.COLUMN_IMAGE_URL + " TEXT NOT NULL,"
+                + MovieEntry.COLUMN_IMAGE_URL + " TEXT,"
                 + MovieEntry.COLUMN_PLOT + " TEXT NOT NULL,"
                 + MovieEntry.COLUMN_RATING + " TEXT NOT NULL,"
                 + MovieEntry.COLUMN_RELEASE_DATE + " TEXT NOT NULL,"
@@ -65,7 +65,7 @@ public class MovieDbHelper extends SQLiteOpenHelper{
                 + NowPlayingMovieEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + NowPlayingMovieEntry.COLUMN_MOVIEID + " TEXT UNIQUE NOT NULL,"
                 + NowPlayingMovieEntry.COLUMN_TITLE + " TEXT NOT NULL,"
-                + NowPlayingMovieEntry.COLUMN_IMAGEURL + " TEXT NOT NULL,"
+                + NowPlayingMovieEntry.COLUMN_IMAGEURL + " TEXT,"
                 + NowPlayingMovieEntry.COLUMN_PLOT + " TEXT NOT NULL,"
                 + NowPlayingMovieEntry.COLUMN_RATING + " TEXT NOT NULL,"
                 + NowPlayingMovieEntry.COLUMN_RELEASEDATE + " TEXT NOT NULL"+ ");";

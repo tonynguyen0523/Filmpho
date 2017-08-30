@@ -37,7 +37,7 @@ public class FilmphoSyncAdapter extends AbstractThreadedSyncAdapter {
     private final String LOG_TAG = FilmphoSyncAdapter.class.getSimpleName();
 
     private static final int SYNC_INTERVAL = 60*180;
-    private static final int SYNC_FLEXTIME = SYNC_INTERVAL/3;
+    private static final int SYNC_FLEXTIME = SYNC_INTERVAL;
 
     FilmphoSyncAdapter(Context context, boolean autoInitialize) {
         super(context, autoInitialize);
@@ -116,7 +116,6 @@ public class FilmphoSyncAdapter extends AbstractThreadedSyncAdapter {
             Log.d(LOG_TAG,nowPlayingMoviesList.get(i).getTitle());
 
             cVVector.add(movieValues);
-
         }
 
         // add to database

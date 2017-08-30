@@ -3,6 +3,7 @@ package com.android.tonynguyen0523.filmpho.Main;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,11 +38,11 @@ public class MovieFragmentAdapter extends CursorRecyclerViewAdapter<MovieFragmen
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         @BindView(R.id.movie_poster_grid_item) ImageView mPosterImage;
-        @BindView(R.id.movie_position_number)
-        TextView mPositionNumber;
+        @BindView(R.id.movie_position_number) TextView mPositionNumber;
         @BindView(R.id.movie_card_title) TextView mMovieTitle;
         @BindView(R.id.movie_progress_bar)ProgressBar mProgressBar;
         @BindView(R.id.movie_rating_bar)RatingBar mRatingBar;
+        @BindView(R.id.movie_poster_empty_view)TextView mEmptyView;
 
         ViewHolder(View view) {
             super(view);
@@ -51,9 +52,7 @@ public class MovieFragmentAdapter extends CursorRecyclerViewAdapter<MovieFragmen
 
         @Override
         public void onClick(View view) {
-
             listener.onGridItemClicked(view,getAdapterPosition());
-
         }
     }
 
@@ -72,19 +71,17 @@ public class MovieFragmentAdapter extends CursorRecyclerViewAdapter<MovieFragmen
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.fragment_movie_recycler_item,parent,false);
 
-        final ViewHolder vh = new ViewHolder(itemView);
-
-        return vh;
+        return new ViewHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder viewHolder, final Cursor cursor) {
 
-        String imageUrl = Utility.formatImageUrl(cursor.getString(MovieFragment.COL_MOVIE_IMAGEURL));
+        String imageUrl = cursor.getString(MovieFragment.COL_MOVIE_IMAGEURL);
+        String imageUrlFormatted = Utility.formatImageUrl(cursor.getString(MovieFragment.COL_MOVIE_IMAGEURL));
         int position = cursor.getPosition();
         String title = cursor.getString(MovieFragment.COL_MOVIE_TITLE);
         String rating = cursor.getString(MovieFragment.COL_MOVIE_RATING);
@@ -93,18 +90,21 @@ public class MovieFragmentAdapter extends CursorRecyclerViewAdapter<MovieFragmen
         viewHolder.mPositionNumber.setText(Integer.toString(position + 1));
         viewHolder.mRatingBar.setRating(Float.parseFloat(rating));
 
-        Picasso.with(mContext).load(imageUrl).into(viewHolder.mPosterImage, new Callback() {
-            @Override
-            public void onSuccess() {
-
-                viewHolder.mProgressBar.setVisibility(View.GONE);
-            }
-            @Override
-            public void onError() {
-
-            }
-        });
+        // Check if image url is null
+        if (imageUrl == null) {
+                    viewHolder.mProgressBar.setVisibility(View.GONE);
+                    viewHolder.mEmptyView.setVisibility(View.VISIBLE);
+        } else {
+            Picasso.with(mContext).load(imageUrlFormatted).into(viewHolder.mPosterImage, new Callback() {
+                @Override
+                public void onSuccess() {
+                    viewHolder.mProgressBar.setVisibility(View.GONE);
+                    viewHolder.mEmptyView.setVisibility(View.GONE);
+                }
+                @Override
+                public void onError() {
+                }
+            });
+        }
     }
-
-
 }

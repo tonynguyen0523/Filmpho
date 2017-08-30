@@ -15,7 +15,7 @@ public class FilmphoSyncService extends Service {
 
     @Override
     public void onCreate() {
-        Log.d("FilmphoSyncService", "onCreate - SunshineSyncService");
+        Log.d("FilmphoSyncService", "onCreate - FilmphoSyncService");
         synchronized (sSyncAdapterLock) {
             if (sFilmphoSyncAdapter == null) {
                 sFilmphoSyncAdapter = new FilmphoSyncAdapter(getApplicationContext(), true);
