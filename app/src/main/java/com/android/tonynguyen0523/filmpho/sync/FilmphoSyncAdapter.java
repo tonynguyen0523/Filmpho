@@ -16,6 +16,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.android.tonynguyen0523.filmpho.BuildConfig;
 import com.android.tonynguyen0523.filmpho.MySingleton;
 import com.android.tonynguyen0523.filmpho.R;
 import com.android.tonynguyen0523.filmpho.Utility;
@@ -48,7 +49,7 @@ public class FilmphoSyncAdapter extends AbstractThreadedSyncAdapter {
         Log.d(LOG_TAG, "onPerformSync Called.");
         final String sortByQuery = Utility.getPreferredSortBy(getContext());
         String sortUrl = Utility.getUrl(sortByQuery);
-        String nowPlayingUrl = "https://api.themoviedb.org/3/movie/now_playing?api_key=9ea41b1708f89fe7b448e6b08a4d5be0&language=en-US&page=1";
+        String nowPlayingUrl = "https://api.themoviedb.org/3/movie/now_playing?api_key=" + BuildConfig.OPEN_MOVIE_API_KEY + "&language=en-US&page=1";
 
         // String volley
         StringRequest stringNowPlayingRequest = new StringRequest(Request.Method.GET, nowPlayingUrl, new Response.Listener<String>() {
@@ -65,7 +66,6 @@ public class FilmphoSyncAdapter extends AbstractThreadedSyncAdapter {
             public void onErrorResponse(VolleyError error) {
 
             }
-
         });
 
         // String volley
@@ -83,7 +83,6 @@ public class FilmphoSyncAdapter extends AbstractThreadedSyncAdapter {
             public void onErrorResponse(VolleyError error) {
 
             }
-
     });
         MySingleton.getInstance(getContext().getApplicationContext()).addToRequestQueue(stringRequest);
         MySingleton.getInstance(getContext().getApplicationContext()).addToRequestQueue(stringNowPlayingRequest);
@@ -98,7 +97,6 @@ public class FilmphoSyncAdapter extends AbstractThreadedSyncAdapter {
         if(!nowPlayingMoviesList.isEmpty()){nowPlayingMoviesList.clear();}
         nowPlayingMoviesList = movieDBResponse.getList();
 
-
         Vector<ContentValues> cVVector = new Vector<>(nowPlayingMoviesList.size());
 
         Log.d(LOG_TAG,"Now playing " + Integer.toString(nowPlayingMoviesList.size()));
@@ -109,11 +107,10 @@ public class FilmphoSyncAdapter extends AbstractThreadedSyncAdapter {
             movieValues.put(MovieContract.NowPlayingMovieEntry.COLUMN_MOVIEID, nowPlayingMoviesList.get(i).getMovieID());
             movieValues.put(MovieContract.NowPlayingMovieEntry.COLUMN_TITLE, nowPlayingMoviesList.get(i).getTitle());
             movieValues.put(MovieContract.NowPlayingMovieEntry.COLUMN_IMAGEURL, nowPlayingMoviesList.get(i).getPosterPath());
+            movieValues.put(MovieContract.NowPlayingMovieEntry.COLUMN_BACKDROP, nowPlayingMoviesList.get(i).getBackDrop());
             movieValues.put(MovieContract.NowPlayingMovieEntry.COLUMN_PLOT, nowPlayingMoviesList.get(i).getOverview());
             movieValues.put(MovieContract.NowPlayingMovieEntry.COLUMN_RATING, nowPlayingMoviesList.get(i).getVoteAverage());
             movieValues.put(MovieContract.NowPlayingMovieEntry.COLUMN_RELEASEDATE, nowPlayingMoviesList.get(i).getReleaseDate());
-
-            Log.d(LOG_TAG,nowPlayingMoviesList.get(i).getTitle());
 
             cVVector.add(movieValues);
         }
@@ -125,7 +122,6 @@ public class FilmphoSyncAdapter extends AbstractThreadedSyncAdapter {
             getContext().getContentResolver().delete(MovieContract.NowPlayingMovieEntry.CONTENT_URI,null,null);
             getContext().getContentResolver().bulkInsert(MovieContract.NowPlayingMovieEntry.CONTENT_URI, cvArray);
         }
-
     }
 
     private void getMovieDataFromGSON(String response, String sortBy)
@@ -139,10 +135,7 @@ public class FilmphoSyncAdapter extends AbstractThreadedSyncAdapter {
         if(!moviesList.isEmpty()){moviesList.clear();}
         moviesList = movieDBResponse.getList();
 
-
         Vector<ContentValues> cVVector = new Vector<>(moviesList.size());
-
-        Log.d(LOG_TAG,Integer.toString(moviesList.size()));
 
         for(int i = 0; i < moviesList.size(); i++){
 
@@ -151,14 +144,12 @@ public class FilmphoSyncAdapter extends AbstractThreadedSyncAdapter {
             movieValues.put(MovieContract.MovieEntry.COLUMN_MOVIE_ID, moviesList.get(i).getMovieID());
             movieValues.put(MovieContract.MovieEntry.COLUMN_TITLE, moviesList.get(i).getTitle());
             movieValues.put(MovieContract.MovieEntry.COLUMN_IMAGE_URL, moviesList.get(i).getPosterPath());
+            movieValues.put(MovieContract.MovieEntry.COLUMN_BACKDROP, moviesList.get(i).getBackDrop());
             movieValues.put(MovieContract.MovieEntry.COLUMN_PLOT, moviesList.get(i).getOverview());
             movieValues.put(MovieContract.MovieEntry.COLUMN_RATING, moviesList.get(i).getVoteAverage());
             movieValues.put(MovieContract.MovieEntry.COLUMN_RELEASE_DATE, moviesList.get(i).getReleaseDate());
 
-            Log.d(LOG_TAG,moviesList.get(i).getTitle());
-
             cVVector.add(movieValues);
-
         }
 
         // add to database
@@ -168,7 +159,6 @@ public class FilmphoSyncAdapter extends AbstractThreadedSyncAdapter {
             getContext().getContentResolver().delete(MovieContract.MovieEntry.CONTENT_URI,null,null);
             getContext().getContentResolver().bulkInsert(MovieContract.MovieEntry.CONTENT_URI, cvArray);
         }
-
     }
 
     // First, check if the sort by exist in the database.

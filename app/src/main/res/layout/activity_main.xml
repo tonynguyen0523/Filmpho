@@ -25,10 +25,8 @@
         android:layout_marginLeft="5dp"
         android:layout_marginStart="5dp"
         android:textSize="15sp"
-        android:backgroundTint="@color/tint"
         android:drawableRight="@drawable/ic_arrow_drop_down_white_18dp"
         android:drawableEnd="@drawable/ic_arrow_drop_down_white_18dp"
-        android:textColor="@color/white"
         tools:text="Most Popular Movie"/>
 
     <fragment

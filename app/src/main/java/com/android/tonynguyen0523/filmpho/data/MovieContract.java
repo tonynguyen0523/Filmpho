@@ -45,6 +45,7 @@ public class MovieContract {
         public static final String COLUMN_RATING = "rating";
         public static final String COLUMN_RELEASEDATE = "release_date";
         public static final String COLUMN_IMAGEURL = "poster";
+        public static final String COLUMN_BACKDROP = "backdrop";
 
         public static Uri buildNowPlayingUri(long id){
             return ContentUris.withAppendedId(CONTENT_URI,id);
@@ -79,6 +80,7 @@ public class MovieContract {
         public static final String COLUMN_RELEASEDATE = "release_date";
         public static final String COLUMN_IMAGEURL = "poster";
         public static final String COLUMN_SORT_CATEGORY = "sort_category";
+        public static final String COLUMN_BACKDROP = "backdrop";
 
         public static Uri buildFavoriteMoviesUri(long id){
             return ContentUris.withAppendedId(CONTENT_URI,id);
@@ -133,6 +135,7 @@ public class MovieContract {
         public static final String COLUMN_RATING = "rating";
         public static final String COLUMN_RELEASE_DATE = "release_date";
         public static final String COLUMN_MOVIE_ID = "movieId";
+        public static final String COLUMN_BACKDROP = "backdrop";
 
         public static Uri buildMovieUri(long id){
             return ContentUris.withAppendedId(CONTENT_URI,id);

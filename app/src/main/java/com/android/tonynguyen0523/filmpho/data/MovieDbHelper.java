@@ -16,7 +16,7 @@ import static com.android.tonynguyen0523.filmpho.data.MovieContract.MovieEntry;
 
 public class MovieDbHelper extends SQLiteOpenHelper{
 
-    private static final int DATABASE_VERSION = 7;
+    private static final int DATABASE_VERSION = 8;
 
     public static final String DATABASE_NAME = "movie.db";
 
@@ -36,6 +36,7 @@ public class MovieDbHelper extends SQLiteOpenHelper{
                 + MovieEntry.COLUMN_SORTBY_KEY + " TEXT NOT NULL,"
                 + MovieEntry.COLUMN_TITLE + " TEXT NOT NULL,"
                 + MovieEntry.COLUMN_IMAGE_URL + " TEXT,"
+                + MovieEntry.COLUMN_BACKDROP + " TEXT,"
                 + MovieEntry.COLUMN_PLOT + " TEXT NOT NULL,"
                 + MovieEntry.COLUMN_RATING + " TEXT NOT NULL,"
                 + MovieEntry.COLUMN_RELEASE_DATE + " TEXT NOT NULL,"
@@ -55,7 +56,8 @@ public class MovieDbHelper extends SQLiteOpenHelper{
                 + FavoriteMovieEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + FavoriteMovieEntry.COLUMN_MOVIEID + " TEXT UNIQUE NOT NULL,"
                 + FavoriteMovieEntry.COLUMN_TITLE + " TEXT NOT NULL,"
-                + FavoriteMovieEntry.COLUMN_IMAGEURL + " TEXT NOT NULL,"
+                + FavoriteMovieEntry.COLUMN_IMAGEURL + " TEXT,"
+                + FavoriteMovieEntry.COLUMN_BACKDROP + " TEXT,"
                 + FavoriteMovieEntry.COLUMN_PLOT + " TEXT NOT NULL,"
                 + FavoriteMovieEntry.COLUMN_RATING + " TEXT NOT NULL,"
                 + FavoriteMovieEntry.COLUMN_RELEASEDATE + " TEXT NOT NULL,"
@@ -66,6 +68,7 @@ public class MovieDbHelper extends SQLiteOpenHelper{
                 + NowPlayingMovieEntry.COLUMN_MOVIEID + " TEXT UNIQUE NOT NULL,"
                 + NowPlayingMovieEntry.COLUMN_TITLE + " TEXT NOT NULL,"
                 + NowPlayingMovieEntry.COLUMN_IMAGEURL + " TEXT,"
+                + NowPlayingMovieEntry.COLUMN_BACKDROP + " TEXT,"
                 + NowPlayingMovieEntry.COLUMN_PLOT + " TEXT NOT NULL,"
                 + NowPlayingMovieEntry.COLUMN_RATING + " TEXT NOT NULL,"
                 + NowPlayingMovieEntry.COLUMN_RELEASEDATE + " TEXT NOT NULL"+ ");";

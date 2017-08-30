@@ -23,6 +23,9 @@ class Movies {
     @SerializedName("id")
     String movieID;
 
+    @SerializedName("backdrop_path")
+    String backDrop;
+
     String overview;
 
     public String getTitle(){
@@ -48,4 +51,6 @@ class Movies {
     public String getOverview(){
         return overview;
     }
+
+    public String getBackDrop() { return backDrop; }
 }
