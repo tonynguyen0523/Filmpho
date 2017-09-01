@@ -16,7 +16,7 @@ import static com.android.tonynguyen0523.filmpho.data.MovieContract.MovieEntry;
 
 public class MovieDbHelper extends SQLiteOpenHelper{
 
-    private static final int DATABASE_VERSION = 8;
+    private static final int DATABASE_VERSION = 9;
 
     public static final String DATABASE_NAME = "movie.db";
 

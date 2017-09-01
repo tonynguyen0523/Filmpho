@@ -138,7 +138,7 @@ public class MovieContract {
         public static final String COLUMN_PLOT = "plot";
         public static final String COLUMN_RATING = "rating";
         public static final String COLUMN_RELEASE_DATE = "release_date";
-        public static final String COLUMN_MOVIE_ID = "movieId";
+        public static final String COLUMN_MOVIE_ID = "movie_Id";
         public static final String COLUMN_BACKDROP = "backdrop";
 
         public static Uri buildMovieUri(long id){

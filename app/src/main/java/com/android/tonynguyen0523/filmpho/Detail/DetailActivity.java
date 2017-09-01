@@ -35,6 +35,7 @@ public class DetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detail);
         ButterKnife.bind(this);
         setSupportActionBar(mToolbar);
+        mCToolbar.setTitleEnabled(false);
 
         if (savedInstanceState == null) {
             // Initialize database to retrieve backdrop data.
@@ -45,18 +46,22 @@ public class DetailActivity extends AppCompatActivity {
             boolean isNowPlaying = getIntent().getBooleanExtra(getString(R.string.isNowPlaying), false);
 
             String movieID;
+            String table;
             if (!isNowPlaying){
                 movieID = MovieContract.MovieEntry.getMovieIdFromUri(movieUri);
+                table = MovieContract.MovieEntry.TABLE_NAME;
             } else {
                 movieID = MovieContract.NowPlayingMovieEntry.getNowPlayingMovieIdFromUri(movieUri);
+                table = MovieContract.NowPlayingMovieEntry.TABLE_NAME;
             }
 
             // Retrieve backdrop data from database.
-            String query = "SELECT " + MovieContract.MovieEntry.COLUMN_BACKDROP + " FROM movies WHERE " + MovieContract.MovieEntry.COLUMN_MOVIE_ID +
-                    " = " + movieID;
+            String query = "SELECT * FROM " + table + " WHERE movie_id = " + movieID;
             Cursor cursor = mDatabase.rawQuery(query, null);
             if (cursor != null && cursor.moveToFirst()) {
                 String backdrop = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_BACKDROP));
+                String movieTitle = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_TITLE));
+                mToolbar.setTitle(movieTitle);
                 Picasso.with(this).load(Utility.formatImageUrl(backdrop)).into(mBackdropIV);
                 cursor.close();
             }
@@ -78,8 +83,6 @@ public class DetailActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.fragment_detail, fragment)
                     .commit();
-
-
         }
     }
 }

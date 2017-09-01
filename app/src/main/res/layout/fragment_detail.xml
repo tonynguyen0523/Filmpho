@@ -15,7 +15,6 @@
             android:id="@+id/detail_title_textview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#0095a8"
             android:paddingBottom="8dp"
             android:paddingEnd="4dp"
             android:paddingLeft="@dimen/detail_margin_from_poster"

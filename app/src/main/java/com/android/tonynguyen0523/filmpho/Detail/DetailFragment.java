@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,9 +13,11 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.graphics.Palette;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,6 +25,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -29,6 +33,7 @@ import android.widget.ToggleButton;
 
 import com.android.tonynguyen0523.filmpho.Favorite.FavoriteActivity;
 import com.android.tonynguyen0523.filmpho.GridSpacingItemDecoration;
+import com.android.tonynguyen0523.filmpho.ImageLoaderHelper;
 import com.android.tonynguyen0523.filmpho.MySingleton;
 import com.android.tonynguyen0523.filmpho.R;
 import com.android.tonynguyen0523.filmpho.Utility;
@@ -37,6 +42,7 @@ import com.android.tonynguyen0523.filmpho.data.MovieDbHelper;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.squareup.picasso.Picasso;
 
@@ -117,47 +123,26 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             FavoriteMovieEntry.COLUMN_BACKDROP
     };
 
-    static final int COL_ROW_ID = 0;
     static final int COL_MOVIE_IMAGEURL = 1;
     static final int COL_MOVIE_ID = 2;
     static final int COL_MOVIE_TITLE = 3;
     static final int COL_MOVIE_PLOT = 4;
     static final int COL_MOVIE_RATING = 5;
     static final int COL_MOVIE_RELEASE_DATE = 6;
-    static final int COL_MOVIE_SORT_CATEGORY = 7;
-    static final int COL_MOVIE_BACKBROP = 7;
-    static final int COL_FAV_MOVIE_BACKBROP = 8;
-
 
     /**
      * View resources
      */
-    @BindView(R.id.detail_title_textview)
-    TextView mTitleTextView;
-    @BindView(R.id.detail_poster_imageview)
-    ImageView mPosterImageView;
-    @BindView(R.id.detail_plot_textview)
-    TextView mPlotTextView;
-    @BindView(R.id.detail_rating_bar)
-    RatingBar mRatingBar;
-    @BindView(R.id.detail_release_date_textview)
-    TextView mReleaseDateTextView;
-    @BindView(R.id.favorite_toggle)
-    ToggleButton mFavToggleButton;
-    @BindView(R.id.detail_relative_layout)
-    View mDetailRelativeLayout;
-    @Nullable @BindView(R.id.video_recycler_view)
-    RecyclerView mVideoRecyclerView;
-//    @BindView(R.id.detail_backdrop)
-//    ImageView mBackDrop;
-//    @BindView(R.id.detail_toolbar)
-//    Toolbar mToolbar;
-//    @BindView(R.id.detail_collapsing_toobar)
-//    CollapsingToolbarLayout mCollapsingToolbar;
+    @BindView(R.id.detail_title_textview) TextView mTitleTextView;
+    @BindView(R.id.detail_poster_imageview) ImageView mPosterImageView;
+    @BindView(R.id.detail_plot_textview) TextView mPlotTextView;
+    @BindView(R.id.detail_rating_bar) RatingBar mRatingBar;
+    @BindView(R.id.detail_release_date_textview) TextView mReleaseDateTextView;
+    @BindView(R.id.favorite_toggle) ToggleButton mFavToggleButton;
+    @BindView(R.id.detail_relative_layout) View mDetailRelativeLayout;
+    @Nullable @BindView(R.id.video_recycler_view) RecyclerView mVideoRecyclerView;
+    @BindView(R.id.detail_frame_helper) FrameLayout mFrameHelperLayout;
 
-    /**
-     * ArrayList for video results
-     */
     private ArrayList<String> videosList;
     private Unbinder unbinder;
     private Uri mUri;
@@ -170,7 +155,8 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     private String rating;
     private String releaseDate;
     private String table;
-    private String backdrop;
+    private int palleteVibrant;
+    private int palleteDark;
 
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
@@ -340,7 +326,6 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
                 plot = data.getString(COL_MOVIE_PLOT);
                 rating = data.getString(COL_MOVIE_RATING);
                 releaseDate = data.getString(COL_MOVIE_RELEASE_DATE);
-                backdrop = data.getString(COL_MOVIE_BACKBROP);
 
                 mTitleTextView.setText(title);
                 mPlotTextView.setText(plot);
@@ -361,6 +346,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
                 // Load picture from url with Picasso.
                 String finalImageUrl = Utility.formatImageUrl(imageUrl);
                 Picasso.with(getActivity()).load(finalImageUrl).into(mPosterImageView);
+                palletePicker(finalImageUrl);
             } else {
                 mDetailRelativeLayout.setVisibility(View.GONE);
             }
@@ -388,7 +374,6 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
                 });
                 // Set json request to queue.
                 MySingleton.getInstance(getContext().getApplicationContext()).addToRequestQueue(jsonObjectRequest);
-
             }
 
             // Check for internet connectivity.
@@ -435,6 +420,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
         // Set the adapter to video's recycler view.
         mVideoAdapter = new VideoRecyclerAdapter(getContext(), videosList);
+        assert mVideoRecyclerView != null;
         mVideoRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false));
         mVideoRecyclerView.setAdapter(mVideoAdapter);
     }
@@ -457,5 +443,27 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         } else {
             return false;
         }
+    }
+
+    private void palletePicker(String imageUrl){
+
+        ImageLoaderHelper.getInstance(getActivity()).getImageLoader()
+                .get(imageUrl, new ImageLoader.ImageListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                    }
+                    @Override
+                    public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
+                        Bitmap bitmap = response.getBitmap();
+                        if (bitmap != null){
+                            Palette palette = Palette.from(bitmap).generate();
+                            palleteVibrant = palette.getVibrantColor(ContextCompat.getColor(getContext(),R.color.white));
+                            palleteDark = palette.getDarkMutedColor(ContextCompat.getColor(getContext(),R.color.colorPrimaryDark));
+                            mFrameHelperLayout.setBackgroundColor(palleteVibrant);
+                            mTitleTextView.setTextColor(palleteDark);
+                        }
+                    }
+                });
     }
 }

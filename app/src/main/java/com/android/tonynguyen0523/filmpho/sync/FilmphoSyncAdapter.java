@@ -180,7 +180,6 @@ public class FilmphoSyncAdapter extends AbstractThreadedSyncAdapter {
         } else {
 
             ContentValues sortByValues = new ContentValues();
-
             sortByValues.put(MovieContract.MovieSortByEntry.COLUMN_MOVIE_SORT_BY, sortBy);
 
             Uri insertedUri = getContext().getContentResolver().insert(
