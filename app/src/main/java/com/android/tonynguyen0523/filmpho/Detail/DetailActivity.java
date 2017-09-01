@@ -5,9 +5,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.widget.ImageView;
 
 import com.android.tonynguyen0523.filmpho.R;
@@ -35,6 +37,8 @@ public class DetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detail);
         ButterKnife.bind(this);
         setSupportActionBar(mToolbar);
+        mToolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.white));
+        mToolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
         mCToolbar.setTitleEnabled(false);
 
         if (savedInstanceState == null) {
@@ -61,7 +65,7 @@ public class DetailActivity extends AppCompatActivity {
             if (cursor != null && cursor.moveToFirst()) {
                 String backdrop = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_BACKDROP));
                 String movieTitle = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_TITLE));
-                mToolbar.setTitle(movieTitle);
+                getSupportActionBar().setTitle(movieTitle);
                 Picasso.with(this).load(Utility.formatImageUrl(backdrop)).into(mBackdropIV);
                 cursor.close();
             }
@@ -84,5 +88,12 @@ public class DetailActivity extends AppCompatActivity {
                     .add(R.id.fragment_detail, fragment)
                     .commit();
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_detail, menu);
+        return true;
     }
 }

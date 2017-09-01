@@ -155,8 +155,8 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     private String rating;
     private String releaseDate;
     private String table;
-    private int palleteVibrant;
-    private int palleteDark;
+    private int paletteVibrant;
+    private int paletteDark;
 
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
@@ -346,7 +346,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
                 // Load picture from url with Picasso.
                 String finalImageUrl = Utility.formatImageUrl(imageUrl);
                 Picasso.with(getActivity()).load(finalImageUrl).into(mPosterImageView);
-                palletePicker(finalImageUrl);
+                palettePicker(finalImageUrl);
             } else {
                 mDetailRelativeLayout.setVisibility(View.GONE);
             }
@@ -369,13 +369,11 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
                 }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-
                     }
                 });
                 // Set json request to queue.
                 MySingleton.getInstance(getContext().getApplicationContext()).addToRequestQueue(jsonObjectRequest);
             }
-
             // Check for internet connectivity.
             if(!Utility.hasInternet(getContext())){
                 Snackbar snackbar = Snackbar
@@ -388,7 +386,6 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
                         });
                 snackbar.show();
             }
-
         }
 
         @Override
@@ -406,7 +403,6 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             for (int i = 0; i < videoArray.length(); i++) {
 
                 JSONObject videoResults = videoArray.getJSONObject(i);
-
                 String resultsStr = videoResults.toString();
 
                 // Add results to ArrayList.
@@ -435,7 +431,6 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         long exist = DatabaseUtils.queryNumEntries(mDatabase, FavoriteMovieEntry.TABLE_NAME,
                 FavoriteMovieEntry.COLUMN_MOVIEID +
                         " = " + movieId, null);
-
         mDatabase.close();
 
         if (exist > 0) {
@@ -445,23 +440,23 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         }
     }
 
-    private void palletePicker(String imageUrl){
+    private void palettePicker(String imageUrl){
 
         ImageLoaderHelper.getInstance(getActivity()).getImageLoader()
                 .get(imageUrl, new ImageLoader.ImageListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-
                     }
+
                     @Override
                     public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
                         Bitmap bitmap = response.getBitmap();
                         if (bitmap != null){
                             Palette palette = Palette.from(bitmap).generate();
-                            palleteVibrant = palette.getVibrantColor(ContextCompat.getColor(getContext(),R.color.white));
-                            palleteDark = palette.getDarkMutedColor(ContextCompat.getColor(getContext(),R.color.colorPrimaryDark));
-                            mFrameHelperLayout.setBackgroundColor(palleteVibrant);
-                            mTitleTextView.setTextColor(palleteDark);
+                            paletteVibrant = palette.getVibrantColor(ContextCompat.getColor(getContext(),R.color.white));
+                            paletteDark = palette.getDarkMutedColor(ContextCompat.getColor(getContext(),R.color.colorPrimaryDark));
+                            mFrameHelperLayout.setBackgroundColor(paletteVibrant);
+                            mTitleTextView.setTextColor(paletteDark);
                         }
                     }
                 });
