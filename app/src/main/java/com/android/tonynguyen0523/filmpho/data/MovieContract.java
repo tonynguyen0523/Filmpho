@@ -51,12 +51,16 @@ public class MovieContract {
             return ContentUris.withAppendedId(CONTENT_URI,id);
         }
 
-        public static  Uri BuildNowPlayingMovieWithMovieId(String movieId){
+        public static Uri BuildNowPlayingMovieWithMovieId(String movieId){
             return CONTENT_URI.buildUpon().appendPath(movieId).build();
         }
 
         public static  Uri BuildNowPlayingMovieWithSortAndMovieId(String sort, String movieId){
             return CONTENT_URI.buildUpon().appendPath(sort).appendPath(movieId).build();
+        }
+
+        public static String getNowPlayingMovieIdFromUri(Uri uri){
+            return uri.getPathSegments().get(1);
         }
     }
 
@@ -160,10 +164,6 @@ public class MovieContract {
 
         public static String getMovieIdFromUri(Uri uri){
             return uri.getPathSegments().get(2);
-        }
-
-        public static String getNowPlayingMovieIdFromUri(Uri uri){
-            return uri.getPathSegments().get(1);
         }
     }
 }

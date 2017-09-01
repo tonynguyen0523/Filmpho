@@ -1,61 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-
-
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/video_layout"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp">
 
     <ImageView
         android:id="@+id/video_thumbnail"
-        android:layout_width="match_parent"
-        android:layout_height="250dp"
+        android:layout_width="140dp"
+        android:layout_height="100dp"
         android:scaleType="centerCrop"/>
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="250dp"
-        android:layout_gravity="center_horizontal"
-        android:src="@drawable/ic_play_circle_outline_white_48dp"/>
-
-    <!--<TextView-->
-        <!--android:id="@+id/video_type"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:textStyle="bold"-->
-        <!--android:textSize="16sp"-->
-        <!--android:layout_alignParentTop="true"-->
-        <!--android:paddingLeft="3dp"-->
-        <!--android:layout_toRightOf="@id/video_thumbnail"-->
-        <!--tools:text="Trailer"-->
-        <!--/>-->
-
-    <!--<TextView-->
-        <!--android:id="@+id/colon"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_below="@id/video_type"-->
-        <!--android:layout_toRightOf="@id/video_type"-->
-        <!--android:layout_alignParentTop="true"-->
-        <!--android:textSize="16sp"-->
-        <!--android:text="@string/colon"/>-->
-
-    <!--<TextView-->
-        <!--android:id="@+id/video_title"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:ellipsize="end"-->
-        <!--android:scrollHorizontally="true"-->
-        <!--android:textSize="16sp"-->
-        <!--android:maxLines="3"-->
-        <!--android:paddingRight="16dp"-->
-        <!--android:paddingLeft="3dp"-->
-        <!--android:layout_toRightOf="@id/video_thumbnail"-->
-        <!--android:layout_below="@id/video_type"-->
-        <!--tools:text="Official Movie Trailer"/>-->
-
 
     <ImageView
         android:id="@+id/video_menu"
@@ -64,7 +20,5 @@
         android:src="@drawable/ic_more_vert_white_24dp"
         android:layout_gravity="end"
         android:paddingTop="5dp"/>
-
-
 
 </FrameLayout>

@@ -1,134 +1,138 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/detail_relative_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <RelativeLayout
-        android:id="@+id/detail_relative_layout"
+    <FrameLayout
+        android:id="@+id/detail_frame_helper"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
-        <FrameLayout
-            android:id="@+id/detail_frame_helper"
+        <TextView
+            android:id="@+id/detail_title_textview"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="#0095a8"
+            android:paddingBottom="8dp"
+            android:paddingEnd="4dp"
+            android:paddingLeft="@dimen/detail_margin_from_poster"
+            android:paddingRight="4dp"
+            android:paddingStart="@dimen/detail_margin_from_poster"
+            android:paddingTop="8dp"
+            android:textColor="@color/colorPrimary"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:maxLines="2"
+            android:ellipsize="end"
+            tools:text="Moana" />
+    </FrameLayout>
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+    <ImageView
+        android:id="@+id/detail_poster_imageview"
+        android:layout_width="wrap_content"
+        android:layout_height="175dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="8dp"
+        android:contentDescription="@string/detail_movie_poster_cd"
+        tools:background="@color/tint"
+        tools:layout_height="175dp"
+        tools:layout_width="125dp" />
 
-            <View
-                android:id="@+id/frame_helper"
-                android:layout_width="match_parent"
-                android:layout_height="225dp"/>
+    <View
+        android:id="@+id/under_poster_border"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/detail_poster_imageview"
+        android:layout_margin="10dp"
+        android:background="@color/colorPrimary" />
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/video_recycler_view"
-            android:layout_width="match_parent"
-            android:background="#000"
-            android:layout_height="250dp"/>
+    <TextView
+        android:id="@+id/detail_video_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/under_poster_border"
+        android:layout_marginLeft="@dimen/detail_margin_left"
+        android:layout_marginStart="@dimen/detail_margin_left"
+        android:layout_marginBottom="5dp"
+        android:textStyle="bold"
+        android:textSize="@dimen/detail_header_text_size"
+        android:text="@string/trailers"/>
 
-                <View
-                    android:id="@+id/frame_helper2"
-                    android:layout_width="match_parent"
-                    android:layout_height="10dp"
-                    android:layout_below="@id/frame_helper"/>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/video_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/detail_video_header"
+        android:layout_marginBottom="5dp"/>
 
-            <ImageView
-                android:id="@+id/detail_poster_imageview"
-                android:layout_width="wrap_content"
-                android:layout_height="175dp"
-                android:layout_below="@id/frame_helper"
-                android:focusableInTouchMode="true"
-                android:paddingLeft="8dp"
-                tools:layout_height="200dp"
-                tools:layout_width="150dp" />
+    <TextView
+        android:id="@+id/detail_plot_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/video_recycler_view"
+        android:layout_marginLeft="@dimen/detail_margin_left"
+        android:layout_marginStart="@dimen/detail_margin_left"
+        android:layout_marginBottom="5dp"
+        android:textStyle="bold"
+        android:textSize="@dimen/detail_header_text_size"
+        android:text="@string/plot"/>
 
-                <View
-                    android:id="@+id/under_poster_border"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/colorPrimary"
-                    android:layout_margin="10dp"
-                    android:layout_below="@id/detail_poster_imageview"/>
+    <TextView
+        android:id="@+id/detail_plot_textview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/detail_plot_header"
+        android:padding="8dp"
+        android:textColor="@color/colorPrimaryDark"
+        tools:text="ploerlkjadhflkafekhfaileufhalefhalweifhakljfhdaslkhf" />
 
+    <RatingBar
+        android:id="@+id/detail_rating_bar"
+        style="?android:attr/ratingBarStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/detail_frame_helper"
+        android:layout_marginBottom="4dp"
+        android:layout_marginLeft="@dimen/detail_margin_from_poster"
+        android:layout_marginStart="@dimen/detail_margin_from_poster"
+        android:layout_marginTop="4dp"
+        android:isIndicator="true"
+        android:numStars="10"
+        android:progressTint="@color/tint"
+        android:secondaryProgressTint="#00000000"
+        android:stepSize="0.1" />
 
-                <TextView
-                    android:id="@+id/detail_title_textview"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingBottom="8dp"
-                    android:paddingLeft="8dp"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="25sp"
-                    android:textStyle="bold"
-                    android:background="#0095a8"
-                    android:layout_below="@id/frame_helper2"
-                    android:layout_toRightOf="@id/detail_poster_imageview"
-                    android:layout_toEndOf="@id/detail_poster_imageview"
-                    tools:text="Moana" />
+    <TextView
+        android:id="@+id/detail_release_date_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/detail_rating_bar"
+        android:layout_marginLeft="@dimen/detail_margin_from_poster"
+        android:textColor="@color/colorPrimary"
+        android:textSize="25sp"
+        tools:text="1991" />
 
-                <TextView
-                    android:id="@+id/detail_release_date_textview"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/detail_title_textview"
-                    android:layout_toRightOf="@id/detail_poster_imageview"
-                    android:paddingLeft="8dp"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="25sp"
-                    tools:text="1991" />
+    <ToggleButton
+        android:id="@+id/favorite_toggle"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignBottom="@id/detail_poster_imageview"
+        android:layout_marginLeft="@dimen/detail_margin_from_poster"
+        android:layout_marginStart="@dimen/detail_margin_from_poster"
+        android:background="@drawable/favorite_toggle_selector"
+        android:textOff=""
+        android:textOn="" />
 
-                <TextView
-                    android:id="@+id/detail_rating_textview"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/detail_title_textview"
-                    android:layout_toRightOf="@id/detail_release_date_textview"
-                    android:layout_marginLeft="8dp"
-                    android:gravity="center"
-                    tools:text="1.22" />
+    <View
+        android:id="@+id/under_plot_border"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/detail_plot_textview"
+        android:layout_margin="10dp"
+        android:background="@color/colorPrimary" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/detail_title_textview"
-                    android:layout_toRightOf="@id/detail_rating_textview"
-                    android:text="@string/_10" />
-
-                <ToggleButton
-                    android:id="@+id/favorite_toggle"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_below="@id/detail_release_date_textview"
-                    android:layout_toRightOf="@id/detail_poster_imageview"
-                    android:background="@drawable/favorite_toggle_selector"
-                    android:layout_marginLeft="8dp"
-                    android:textOff=""
-                    android:textOn="" />
-
-                <TextView
-                    android:id="@+id/detail_plot_textview"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/under_poster_border"
-                    android:padding="8dp"
-                    android:paddingTop="8dp"
-                    android:textColor="@color/colorPrimaryDark"
-                    tools:text="ploerlkjadhflkafekhfaileufhalefhalweifhakljfhdaslkhf" />
-
-                <View
-                    android:id="@+id/under_plot_border"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/colorPrimary"
-                    android:layout_margin="10dp"
-                    android:layout_below="@id/detail_plot_textview"/>
-
-            </RelativeLayout>
-
-
-        </FrameLayout>
-    </RelativeLayout>
-</ScrollView>
+</RelativeLayout>

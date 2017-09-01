@@ -8,18 +8,22 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
@@ -46,6 +50,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
+import static com.android.tonynguyen0523.filmpho.data.MovieContract.*;
 import static com.android.tonynguyen0523.filmpho.data.MovieContract.FavoriteMovieEntry;
 import static com.android.tonynguyen0523.filmpho.data.MovieContract.MovieEntry;
 
@@ -79,7 +84,8 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             MovieEntry.COLUMN_TITLE,
             MovieEntry.COLUMN_PLOT,
             MovieEntry.COLUMN_RATING,
-            MovieEntry.COLUMN_RELEASE_DATE
+            MovieEntry.COLUMN_RELEASE_DATE,
+            MovieEntry.COLUMN_BACKDROP
     };
 
     /**
@@ -95,7 +101,8 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             FavoriteMovieEntry.COLUMN_PLOT,
             FavoriteMovieEntry.COLUMN_RATING,
             FavoriteMovieEntry.COLUMN_RELEASEDATE,
-            FavoriteMovieEntry.COLUMN_SORT_CATEGORY
+            FavoriteMovieEntry.COLUMN_SORT_CATEGORY,
+            FavoriteMovieEntry.COLUMN_BACKDROP
     };
 
     private static final String[] NOW_PLAYING = {
@@ -107,6 +114,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             FavoriteMovieEntry.COLUMN_PLOT,
             FavoriteMovieEntry.COLUMN_RATING,
             FavoriteMovieEntry.COLUMN_RELEASEDATE,
+            FavoriteMovieEntry.COLUMN_BACKDROP
     };
 
     static final int COL_ROW_ID = 0;
@@ -117,6 +125,9 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     static final int COL_MOVIE_RATING = 5;
     static final int COL_MOVIE_RELEASE_DATE = 6;
     static final int COL_MOVIE_SORT_CATEGORY = 7;
+    static final int COL_MOVIE_BACKBROP = 7;
+    static final int COL_FAV_MOVIE_BACKBROP = 8;
+
 
     /**
      * View resources
@@ -127,29 +138,31 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     ImageView mPosterImageView;
     @BindView(R.id.detail_plot_textview)
     TextView mPlotTextView;
-    @BindView(R.id.detail_rating_textview)
-    TextView mRatingTextView;
+    @BindView(R.id.detail_rating_bar)
+    RatingBar mRatingBar;
     @BindView(R.id.detail_release_date_textview)
     TextView mReleaseDateTextView;
     @BindView(R.id.favorite_toggle)
     ToggleButton mFavToggleButton;
     @BindView(R.id.detail_relative_layout)
     View mDetailRelativeLayout;
-    @Nullable
-    @BindView(R.id.video_recycler_view)
+    @Nullable @BindView(R.id.video_recycler_view)
     RecyclerView mVideoRecyclerView;
-
+//    @BindView(R.id.detail_backdrop)
+//    ImageView mBackDrop;
+//    @BindView(R.id.detail_toolbar)
+//    Toolbar mToolbar;
+//    @BindView(R.id.detail_collapsing_toobar)
+//    CollapsingToolbarLayout mCollapsingToolbar;
 
     /**
      * ArrayList for video results
      */
     private ArrayList<String> videosList;
-
     private Unbinder unbinder;
     private Uri mUri;
     private String mReplaceFragment;
     private VideoRecyclerAdapter mVideoAdapter;
-
     private String title;
     private String movieId;
     private String imageUrl;
@@ -157,13 +170,12 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     private String rating;
     private String releaseDate;
     private String table;
+    private String backdrop;
 
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
-
         View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
-        // Bind the bindViews to View.
         unbinder = ButterKnife.bind(this, rootView);
 
         // Get uri passed in.
@@ -185,40 +197,13 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         mVideoRecyclerView.setNestedScrollingEnabled(false);
 
         // Set LayoutManager of the recycler view to LinearLayout.
-        mVideoRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 1));
-        mVideoRecyclerView.addItemDecoration(new GridSpacingItemDecoration(1, GridSpacingItemDecoration.dpToPx(getContext(), 7), true));
-
-//        // Pass current uri to ReviewActivity when review button is clicked.
-//        mReviewButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//                // Send current uri to ReviewFragment
-//                Bundle args = new Bundle();
-//                args.putParcelable(ReviewFragment.REVIEW_URI, mUri);
-//
-//                ReviewFragment reviewFragment = new ReviewFragment();
-//                reviewFragment.setArguments(args);
-//
-//                // Get current fragment resource id to replace
-//                int resourceId = getContext().getResources()
-//                        .getIdentifier(mReplaceFragment,"id", getContext().getPackageName());
-//
-//                final FragmentTransaction ft = getFragmentManager().beginTransaction();
-//                ft.replace(resourceId, reviewFragment);
-//                ft.addToBackStack(null);
-//                ft.commit();
-//                Log.d("RESOURCE", Integer.toString(resourceId));
-//            }
-//
-//        });
+        mVideoRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false));
 
         // Insert or delete selected movie to/from favorite database.
         mFavToggleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (mFavToggleButton.isChecked()) {
-
                     // Get sort category that the movie belongs to.
                     String sortCategory = MovieEntry.getMovieSortByFromUri(mUri);
 
@@ -246,7 +231,6 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
                             });
                     snackbar.show();
                 } else {
-
                     // Delete from favorite database.
                     getContext().getContentResolver().delete(FavoriteMovieEntry.CONTENT_URI, FavoriteMovieEntry.COLUMN_MOVIEID + "=?",
                             new String[]{movieId});
@@ -258,8 +242,6 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
                         getActivity().finish();
-
-
                     } else {
                         Snackbar snackbar = Snackbar
                                 .make(container, title + " has been deleted from Favorites.", Snackbar.LENGTH_LONG)
@@ -311,11 +293,10 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
 
         if (null != mUri) {
-
             String movieEntryTable = "movie";
             String favoritesTable = "favorites";
             String nowPlaying = "now_playing";
-            table = MovieContract.MovieEntry.getMovieTableFromUri(mUri);
+            table = MovieEntry.getMovieTableFromUri(mUri);
 
             // Check which table to access.
             if (table.contains(movieEntryTable)) {
@@ -343,12 +324,9 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
                         null,
                         null);
             }
-
         }
-
             return null;
         }
-
 
         @Override
         public void onLoadFinished (Loader < Cursor > loader, Cursor data){
@@ -362,10 +340,11 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
                 plot = data.getString(COL_MOVIE_PLOT);
                 rating = data.getString(COL_MOVIE_RATING);
                 releaseDate = data.getString(COL_MOVIE_RELEASE_DATE);
+                backdrop = data.getString(COL_MOVIE_BACKBROP);
 
                 mTitleTextView.setText(title);
                 mPlotTextView.setText(plot);
-                mRatingTextView.setText(rating);
+                mRatingBar.setRating(Float.parseFloat(rating));
 
                 // Display correct toggle image is movie exist in favorite database or not.
                 if (movieIdExist(movieId)) {
@@ -381,8 +360,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
                 // Create image url to display poster thumbnail.
                 // Load picture from url with Picasso.
                 String finalImageUrl = Utility.formatImageUrl(imageUrl);
-                Picasso.with(this.getActivity()).load(finalImageUrl).into(mPosterImageView);
-//                Picasso.with(this.getActivity()).load(finalImageUrl).into(mBigPoster);
+                Picasso.with(getActivity()).load(finalImageUrl).into(mPosterImageView);
             } else {
                 mDetailRelativeLayout.setVisibility(View.GONE);
             }
@@ -391,7 +369,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
                 // Create video url with current movie id.
                 String videoUrl;
                 if(!table.contains("now_playing")) videoUrl = Utility.getVideosUrlWithId(MovieEntry.getMovieIdFromUri(mUri));
-                else videoUrl = Utility.getVideosUrlWithId(MovieEntry.getNowPlayingMovieIdFromUri(mUri));
+                else videoUrl = Utility.getVideosUrlWithId(NowPlayingMovieEntry.getNowPlayingMovieIdFromUri(mUri));
 
                 // Get movie videos.
                 // JSON parse video url using Volley.
@@ -401,10 +379,6 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
                     public void onResponse(JSONObject response) {
 
                         displayVideoResults(response);
-
-//                        if (videosList.isEmpty()) {
-//                            mVideoHeader.setText(R.string.no_videos);
-//                        }
                     }
                 }, new Response.ErrorListener() {
                     @Override

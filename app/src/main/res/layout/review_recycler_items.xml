@@ -28,4 +28,13 @@
         android:src="@drawable/ic_arrow_drop_down_black_24dp"
         android:layout_alignParentRight="true"
         android:layout_below="@id/review_content"/>
+
+    <View
+        android:id="@+id/under_poster_border"
+        android:layout_width="50dp"
+        android:layout_height="1dp"
+        android:layout_below="@id/text_box_arrow"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="10dp"
+        android:background="@color/colorPrimary" />
 </RelativeLayout>

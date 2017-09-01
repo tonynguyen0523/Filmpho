@@ -110,7 +110,7 @@ public class ReviewFragment extends Fragment {
         // Get movie id from uri to retrieve review data.
         final String movieId;
         if(isNowPlaying){
-            movieId = MovieContract.MovieEntry.getNowPlayingMovieIdFromUri(mUri);
+            movieId = MovieContract.NowPlayingMovieEntry.getNowPlayingMovieIdFromUri(mUri);
         } else {
             movieId = MovieContract.MovieEntry.getMovieIdFromUri(mUri);
         }

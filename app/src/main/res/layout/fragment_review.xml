@@ -9,11 +9,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:gravity="center"
-        android:textSize="20sp"
+        android:textSize="@dimen/detail_header_text_size"
         android:textStyle="bold"
-        android:padding="2dp"
-        android:textColor="@color/colorPrimaryDark"
+        android:layout_marginLeft="@dimen/detail_margin_left"
         android:text="@string/reviews"/>
 
     <android.support.v7.widget.RecyclerView

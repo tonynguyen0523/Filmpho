@@ -33,6 +33,10 @@
     <string name="isNowPlaying">isNowPlaying</string>
     <string name="now_playing">Now Playing</string>
     <string name="image_not_available">Image Not Available</string>
+    <string name="detail_movie_poster_cd">movie_poster</string>
+    <string name="detail_movie_backdrop_cd">detail movie backdrop</string>
+    <string name="trailers">Trailers:</string>
+    <string name="plot">Plot:</string>
 
 
 </resources>
