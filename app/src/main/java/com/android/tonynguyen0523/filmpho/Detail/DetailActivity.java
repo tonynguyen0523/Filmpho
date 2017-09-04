@@ -23,12 +23,20 @@ import butterknife.ButterKnife;
 
 public class DetailActivity extends AppCompatActivity {
 
+    private static final String MOVIE_TITLE = "title";
+    private static final String MOVIE_BACKDROP = "backdrop";
+
     @BindView(R.id.detail_toolbar)
     Toolbar mToolbar;
     @BindView(R.id.detail_collapsing_toobar)
     CollapsingToolbarLayout mCToolbar;
     @BindView(R.id.detail_backdrop)
     ImageView mBackdropIV;
+
+    private String movieID;
+    private String table;
+    private String backdrop;
+    private String movieTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,8 +63,6 @@ public class DetailActivity extends AppCompatActivity {
             Uri movieUri = getIntent().getData();
             boolean isNowPlaying = getIntent().getBooleanExtra(getString(R.string.isNowPlaying), false);
 
-            String movieID;
-            String table;
             if (isNowPlaying){
                 movieID = MovieContract.NowPlayingMovieEntry.getNowPlayingMovieIdFromUri(movieUri);
                 table = MovieContract.NowPlayingMovieEntry.TABLE_NAME;
@@ -69,8 +75,8 @@ public class DetailActivity extends AppCompatActivity {
             String query = "SELECT * FROM " + table + " WHERE movie_id = " + movieID;
             Cursor cursor = mDatabase.rawQuery(query, null);
             if (cursor != null && cursor.moveToFirst()) {
-                String backdrop = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_BACKDROP));
-                String movieTitle = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_TITLE));
+                backdrop = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_BACKDROP));
+                movieTitle = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_TITLE));
                 getSupportActionBar().setTitle(movieTitle);
                 Picasso.with(this).load(Utility.formatImageUrl(backdrop)).into(mBackdropIV);
                 cursor.close();
@@ -93,7 +99,19 @@ public class DetailActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.fragment_detail, fragment)
                     .commit();
+        } else {
+            movieTitle = savedInstanceState.getString(MOVIE_TITLE);
+            backdrop = savedInstanceState.getString(MOVIE_BACKDROP);
+            getSupportActionBar().setTitle(movieTitle);
+            Picasso.with(this).load(Utility.formatImageUrl(backdrop)).into(mBackdropIV);
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(MOVIE_TITLE,movieTitle);
+        outState.putString(MOVIE_BACKDROP,backdrop);
     }
 
     @Override

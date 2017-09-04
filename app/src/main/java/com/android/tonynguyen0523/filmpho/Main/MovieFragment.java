@@ -1,6 +1,9 @@
 package com.android.tonynguyen0523.filmpho.Main;
 
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.database.Cursor;
+import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -91,7 +95,13 @@ public class MovieFragment extends Fragment implements LoaderManager.LoaderCallb
         // Bind BindViews to rootView.
         unbinder = ButterKnife.bind(this, rootView);
 
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false));
+
+        if(getContext().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+            mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(),2));
+        } else {
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        }
+
         mRecyclerAdapter = new MovieFragmentAdapter(getContext(),null);
         mRecyclerView.setNestedScrollingEnabled(false);
         mRecyclerView.setAdapter(mRecyclerAdapter);

@@ -70,8 +70,8 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
      * Reference for uri
      */
     public static final String DETAIL_URI = "URI";
-
     public static final String REPLACE_FRAGMENT = "RESOURCE_ID";
+    public static final String TABLE = "table";
 
     /**
      * Loader identifier
@@ -243,7 +243,17 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
                 }
             }
         });
+
+        if(savedInstanceState != null){
+            table = savedInstanceState.getString(TABLE);
+        }
         return rootView;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(TABLE, table);
     }
 
     @Override
