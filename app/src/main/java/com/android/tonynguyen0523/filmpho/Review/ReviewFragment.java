@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.tonynguyen0523.filmpho.GridSpacingItemDecoration;
@@ -59,6 +60,8 @@ public class ReviewFragment extends Fragment {
     ImageView mSadFace;
     @BindView(R.id.review_progress_bar)
     ProgressBar mProgressBar;
+    @BindView(R.id.review_relative_layout)RelativeLayout mRelativeLayout;
+
     private Unbinder unbinder;
     private Uri mUri;
     private Boolean isNowPlaying;
@@ -201,5 +204,14 @@ public class ReviewFragment extends Fragment {
         ReviewRecyclerAdapter mReviewRecyclerAdapter = new ReviewRecyclerAdapter(getContext(), reviewList);
         mRecyclerView.setAdapter(mReviewRecyclerAdapter);
 
+    }
+
+    /**
+     * Restart Loader when sort is changed
+     */
+    public void onSortByChanged(Uri uri) {
+        mUri = uri;
+        reviewList.clear();
+        mRelativeLayout.setVisibility(View.GONE);
     }
 }

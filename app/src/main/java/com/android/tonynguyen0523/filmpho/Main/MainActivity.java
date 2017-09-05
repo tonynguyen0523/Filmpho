@@ -3,10 +3,8 @@ package com.android.tonynguyen0523.filmpho.Main;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,15 +14,18 @@ import com.android.tonynguyen0523.filmpho.Detail.DetailActivity;
 import com.android.tonynguyen0523.filmpho.Detail.DetailFragment;
 import com.android.tonynguyen0523.filmpho.Favorite.FavoriteActivity;
 import com.android.tonynguyen0523.filmpho.R;
+import com.android.tonynguyen0523.filmpho.Review.ReviewFragment;
 import com.android.tonynguyen0523.filmpho.SettingsActivity;
 import com.android.tonynguyen0523.filmpho.Utility;
 import com.android.tonynguyen0523.filmpho.sync.FilmphoSyncAdapter;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity implements MovieFragment.CallBack {
 
     private final String MOVIEDETAILFRAGMENT_TAG = "MDFTAG";
+    private final String MOVIEREVIEWFRAGMENT_TAG = "MRFTAG";
     private String mSortBy;
     private boolean mTwoPane;
 
@@ -140,6 +141,11 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.Cal
                 df.onSortByChanged(uri);
             }
             mSortBy = sortBy;
+            ReviewFragment rf = (ReviewFragment)getSupportFragmentManager().findFragmentByTag(MOVIEREVIEWFRAGMENT_TAG);
+            if(null != rf){
+                uri = null;
+                rf.onSortByChanged(uri);
+            }
         }
     }
 
@@ -155,6 +161,10 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.Cal
 
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.movie_detail_container,fragment, MOVIEDETAILFRAGMENT_TAG)
+                    .commit();
+
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.movie_review_container, ReviewFragment.newInstance(contentUri, isNowPlaying), MOVIEREVIEWFRAGMENT_TAG)
                     .commit();
         } else {
             Intent intent = new Intent(this, DetailActivity.class)
