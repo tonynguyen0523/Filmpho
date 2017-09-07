@@ -95,13 +95,7 @@ public class MovieFragment extends Fragment implements LoaderManager.LoaderCallb
         // Bind BindViews to rootView.
         unbinder = ButterKnife.bind(this, rootView);
 
-
-        if(getContext().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
-            mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(),2));
-        } else {
-            mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-        }
-
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         mRecyclerAdapter = new MovieFragmentAdapter(getContext(),null);
         mRecyclerView.setNestedScrollingEnabled(false);
         mRecyclerView.setAdapter(mRecyclerAdapter);
