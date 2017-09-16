@@ -9,11 +9,9 @@ Built an app, optimized for tablets, to help users discover popular and highly r
 ## Getting Started
 
 ### Installation
-Clone the GitHub repository and use Bundler to install the gem dependencies.
+Clone the GitHub repository.
 ```
 $ git clone https://github.com/tonynguyen0523/Filmpho.git
-$ cd Filmpho
-$ bundle install
 ```
 ### Required
 [API key][1] required.
